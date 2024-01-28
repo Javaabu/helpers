@@ -248,10 +248,10 @@ if (! function_exists('relative_url')) {
     /**
      * Converts an absolute url to a relative url
      *
-     * @param  string  $full_url
-     * @return string
+     * @param  string|null  $full_url
+     * @return bool|string
      */
-    function relative_url(string $full_url): bool|string
+    function relative_url(string|null $full_url): bool|string
     {
         // first check if it starts with the current domain
         if (Str::startsWith($full_url, secure_url('/'))) {

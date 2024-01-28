@@ -25,7 +25,7 @@ class HelpersServiceProvider extends ServiceProvider
     public function register()
     {
         // merge package config with user defined config
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'forms');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'helpers');
 
         // Require helpers defined on the package.
         require_once __DIR__ . '/helpers.php';
