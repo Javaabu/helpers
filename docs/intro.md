@@ -15,9 +15,6 @@ This package is currently under development. If anything works, that's a surpris
 
 Here's a quick example of what this package can offer.
 
-```html
-<x-form :model="$page">
-    <x-form-input name="title" :label="__('Title')" />
-    <x-form-textarea name="content" :label="__('Content')" />
-</x-form>
+```php
+
 ```
