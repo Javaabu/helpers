@@ -1,0 +1,46 @@
+{
+    "name": "javaabu/helpers",
+    "description": "Laravel helper functions for use in everywhere on a project",
+    "homepage": "https://github.com/Javaabu/helpers",
+    "license": "MIT",
+    "keywords": [
+        "javaabu",
+        "laravel",
+        "helpers"
+    ],
+    "authors": [
+        {
+            "name": "Athfan Khaleel",
+            "email": "athfan@javaabu.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^9.0 || ^10.0"
+    },
+    "require-dev": {
+        "orchestra/testbench-browser-kit": "^7.0 || ^8.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Javaabu\\Helpers\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Javaabu\\Helpers\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Javaabu\\Helpers\\HelpersServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable"
+}
