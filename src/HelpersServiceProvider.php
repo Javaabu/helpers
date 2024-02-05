@@ -21,5 +21,10 @@ class HelpersServiceProvider extends ServiceProvider
     {
         // Require helpers defined on the package.
         require_once __DIR__ . '/helpers.php';
+
+        // require local helpers
+        foreach (glob(app_path().'/Helpers/*.php') as $filename) {
+            require_once($filename);
+        }
     }
 }
