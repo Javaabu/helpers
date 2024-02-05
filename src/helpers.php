@@ -11,12 +11,13 @@ if (! function_exists('add_error_class')) {
     /**
      * Adds error class if has error
      *
-     * @param  bool    $has_error
-     * @param  string  $classes
-     * @param  string  $error_class
+     * @param bool $has_error
+     * @param string $classes
+     * @param string $error_class
      * @return string
+     * @deprecated Use javaabu/forms components instead
      */
-    function add_error_class(bool $has_error, string $classes = 'form-control', string $error_class = 'is-invalid'): string
+    function add_error_class($has_error, $classes = 'form-control', $error_class = 'is-invalid')
     {
         return $has_error ? $classes . ' ' . $error_class : $classes;
     }
@@ -33,9 +34,10 @@ if (! function_exists('to_array')) {
     function to_array($array_str): array
     {
         $array = $array_str;
-        if (!is_array($array_str)) {
+        if (! is_array($array_str)) {
             $array = explode(',', $array_str);
         }
+
         return $array;
     }
 }
@@ -93,6 +95,7 @@ if (! function_exists('add_sort_class')) {
      * @param  string  $field
      * @param  string  $classes
      * @return string
+     * @deprecated Use javaabu/forms <x-form-th> instead
      */
     function add_sort_class(string $field, string $classes = ''): string
     {
@@ -138,9 +141,9 @@ if (! function_exists('is_color')) {
      * Checks if is a hex color value
      * Optionally checks for #
      */
-    function is_color($color): bool|int
+    function is_color($color): bool
     {
-        return preg_match('/^#{0,1}([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $color);
+        return preg_match('/^#{0,1}([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $color) == true;
     }
 }
 
@@ -167,9 +170,9 @@ if (! function_exists('remove_prefix')) {
      * Remove the given prefix from a string
      * @param $needle
      * @param $haystack
-     * @return bool|string
+     * @return string
      */
-    function remove_prefix($needle, $haystack): bool|string
+    function remove_prefix($needle, $haystack): string
     {
         if (str_starts_with($haystack, $needle)) {
             $haystack = substr($haystack, strlen($needle));
@@ -182,11 +185,12 @@ if (! function_exists('remove_prefix')) {
 if (! function_exists('remove_suffix')) {
     /**
      * Remove the given suffix from a string
+     *
      * @param $needle
      * @param $haystack
-     * @return bool|string
+     * @return string
      */
-    function remove_suffix($needle, $haystack): bool|string
+    function remove_suffix($needle, $haystack): string
     {
         if (substr($haystack, -strlen($needle), strlen($needle)) == $needle) {
             $haystack = substr($haystack, 0, strlen($haystack) - strlen($needle));
@@ -598,14 +602,14 @@ if (! function_exists('current_controller')) {
 }
 
 if (! function_exists('if_route')) {
-    function if_route($var): string
+    function if_route($var): bool
     {
         return app('request')->routeIs($var);
     }
 }
 
 if (! function_exists('if_route_pattern')) {
-    function if_route_pattern($var): string
+    function if_route_pattern($var): bool
     {
         return app('request')->routeIs($var);
     }
