@@ -22,12 +22,15 @@ jobs:
             include:
                 -   laravel: 11.*
                     testbench: 9.*
+                    carbon: ^2.63
                     minimum-stability: dev
                 -   laravel: 10.*
                     testbench: 8.*
+                    carbon: ^2.63
                     minimum-stability: stable
                 -   laravel: 9.*
                     testbench: 7.*
+                    carbon: ^2.63
                     minimum-stability: stable
             exclude:
                 -   laravel: 11.*
@@ -49,7 +52,7 @@ jobs:
       -   name: Install dependencies
           run: |
               composer config minimum-stability ${{ matrix.minimum-stability }}
-              composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+              composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:${{ matrix.carbon }}" --no-interaction --no-update
               composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       -   name: Execute tests
