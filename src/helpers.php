@@ -749,3 +749,17 @@ if (! function_exists('is_api_request')) {
         return $request->is(config('app.api_prefix').'/*');
     }
 }
+
+if (! function_exists('request_ip')) {
+    /**
+     * Get the ip from the current request
+     */
+    function request_ip(): ?string
+    {
+        if (env('CLOUDFLARE_ENABLED') && isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+            return $_SERVER['HTTP_CF_CONNECTING_IP'];
+        } else {
+            return request()->ip();
+        }
+    }
+}
