@@ -5,6 +5,8 @@
 
 namespace Javaabu\Helpers\AdminModel;
 
+use Illuminate\Database\Eloquent\Builder;
+
 interface AdminModel
 {
     /**
@@ -53,4 +55,13 @@ interface AdminModel
      * @return string
      */
     public function getCauserLogUrlAttribute(): string;
+
+    /**
+     * A search scope
+     *
+     * @param Builder $query
+     * @param $search
+     * @return mixed
+     */
+    public function scopeSearch($query, $search): mixed;
 }
