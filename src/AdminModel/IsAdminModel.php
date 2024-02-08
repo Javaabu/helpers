@@ -12,7 +12,7 @@ trait IsAdminModel
      *
      * @return string
      */
-    public function getAdminLinkAttribute()
+    public function getAdminLinkAttribute(): string
     {
         if ($this->canViewAdminLink()) {
             $admin_url = $this->admin_url;
@@ -31,7 +31,7 @@ trait IsAdminModel
      *
      * @return boolean
      */
-    public function canViewAdminLink()
+    public function canViewAdminLink(): bool
     {
         return auth()->check() && auth()->user()->can('view', $this);
     }
@@ -41,7 +41,7 @@ trait IsAdminModel
      *
      * @return string
      */
-    public function getAdminLinkNameAttribute()
+    public function getAdminLinkNameAttribute(): string
     {
         return $this->name;
     }
@@ -51,7 +51,7 @@ trait IsAdminModel
      *
      * @return string
      */
-    public function getLoggingNameAttribute()
+    public function getLoggingNameAttribute(): string
     {
         return $this->admin_link_name;
     }
@@ -61,7 +61,7 @@ trait IsAdminModel
      *
      * @return string
      */
-    public function getLogUrlAttribute()
+    public function getLogUrlAttribute(): string
     {
         return add_query_arg([
             'subject_type' => $this->getMorphClass(),
@@ -74,7 +74,7 @@ trait IsAdminModel
      *
      * @return string
      */
-    public function getCauserLogUrlAttribute()
+    public function getCauserLogUrlAttribute(): string
     {
         return add_query_arg([
             'causer_type' => $this->getMorphClass(),
