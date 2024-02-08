@@ -5,6 +5,9 @@
 
 namespace Javaabu\Helpers\AdminModel;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
+
 trait IsAdminModel
 {
     /**
@@ -80,5 +83,35 @@ trait IsAdminModel
             'causer_type' => $this->getMorphClass(),
             'causer_id' => $this->id,
         ], route('admin.logs.index'));
+    }
+
+    /**
+     * A search scope
+     *
+     * @param Builder $query
+     * @param $search
+     * @return mixed
+     */
+    public function scopeSearch($query, $search): mixed
+    {
+        if (property_exists($this, 'searchable') && $this->searchable) {
+            $searchable = Arr::wrap($this->searchable);
+
+            $first = true;
+            foreach ($searchable as $attribute) {
+                if  ($first) {
+                    $first = false;
+                    $method = 'where';
+                } else {
+                    $method = 'orWhere';
+                }
+
+                $query->{$method}($attribute, 'like', '%'.$search.'%');
+            }
+
+            return $query;
+        }
+
+        return $query->where($this->getKeyName(), $search);
     }
 }
