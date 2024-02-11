@@ -14,6 +14,11 @@ class CategoryWithSearchable extends Model implements AdminModel
 
     protected $table = 'categories';
 
+    protected static array $dateFields = [
+        'created_at',
+        'updated_at'
+    ];
+
     protected array $searchable = [
         'name'
     ];

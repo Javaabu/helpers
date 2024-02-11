@@ -114,4 +114,31 @@ trait IsAdminModel
 
         return $query->where($this->getKeyName(), $search);
     }
+
+    /**
+     * Get all the date attributes
+     */
+    public function getDateAttributes(): array
+    {
+        $casts = $this->getCasts();
+
+        //dd($casts);
+
+        return $casts;
+    }
+
+    /**
+     * Get the date fields list
+     */
+    public static function getDateFieldsList(): array
+    {
+        $date_fields = static::$dateFields ?? [];
+        $labels = [];
+
+        foreach ($date_fields as $field) {
+            $labels[$field] = __(slug_to_title($field));
+        }
+
+        return $labels;
+    }
 }

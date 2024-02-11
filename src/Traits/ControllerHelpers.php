@@ -48,4 +48,18 @@ trait ControllerHelpers
     {
         return abs($request->input('per_page', $default ?: get_setting('per_page')));
     }
+
+    /**
+     * Get an allowed value from the request
+     *
+     * @param Request $request
+     * @param $key
+     * @param $allowed_values
+     * @param string $default
+     * @return string
+     */
+    protected function getAllowedValue(Request $request, $key, array $allowed_values, $default)
+    {
+        return in_array($request->input($key), $allowed_values) ? $request->input($key) : $default;
+    }
 }
