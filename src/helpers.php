@@ -721,8 +721,13 @@ if (! function_exists('random_id_or_generate')) {
         $id = $return == 'object' ? $id->first() : $id->value($key);
 
         if ((! $id) && $generate) {
-            $id = $model_class::factory()
-                ->create($where);
+            $id = $model_class::factory();
+
+            if (method_exists($id, 'withRequiredRelations')) {
+                $id->withRequiredRelations();
+            }
+
+            $id = $id->create($where);
 
             if ($return != 'object') {
                 $id = $id->{$key};
