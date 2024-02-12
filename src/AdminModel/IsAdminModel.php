@@ -7,6 +7,7 @@ namespace Javaabu\Helpers\AdminModel;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 trait IsAdminModel
 {
@@ -113,5 +114,67 @@ trait IsAdminModel
         }
 
         return $query->where($this->getKeyName(), $search);
+    }
+
+    /**
+     * Get all the date attributes
+     */
+    public function getDateAttributes(): array
+    {
+        $casts = $this->getCasts();
+
+        $date_fields = [];
+
+        foreach ($casts as $attribute => $cast) {
+            if (is_string($cast) && Str::startsWith($cast, 'date')) {
+                $date_fields[] = $attribute;
+            }
+        }
+
+        return array_merge($date_fields, $this->getDates());
+    }
+
+    /**
+     * Query records between dates
+     */
+    public function scopeDateBetween($query, ?string $date_field, $from, $to): mixed
+    {
+        if ($date_field && static::isAllowedDateField($date_field)) {
+            if ($from = parse_date($from)) {
+                $query->where($this->getTable() . '.' . $date_field, '>=', $from);
+            }
+
+            if ($to = parse_date($to)) {
+                $query->where($this->getTable() . '.' . $date_field, '<=', $to);
+            }
+
+        }
+
+        return $query;
+    }
+
+    /**
+     * Get the date fields list
+     */
+    public static function getDateFieldsList(): array
+    {
+        $date_fields = (new static)->getDateAttributes();
+        $labels = [];
+
+        foreach ($date_fields as $field) {
+            $labels[$field] = __(slug_to_title($field));
+        }
+
+        return $labels;
+    }
+
+    /**
+     * Check if allowed date field
+     */
+    public static function isAllowedDateField(string $field): bool
+    {
+        $date_fields = (new static)->getDateAttributes();
+
+        return in_array($field, $date_fields);
     }
 }

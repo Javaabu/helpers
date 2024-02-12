@@ -8,6 +8,44 @@ use Javaabu\Helpers\AdminModel\IsAdminModel;
 use Javaabu\Helpers\Tests\TestCase;
 use Javaabu\Helpers\Tests\InteractsWithDatabase;
 
+class CategoryWithDateCast extends Model implements AdminModel
+{
+    use IsAdminModel;
+
+    protected $table = 'categories';
+
+    protected $casts = [
+        'published_at' => 'date'
+    ];
+
+    protected $guarded = [
+    ];
+
+    public function getAdminUrlAttribute(): string
+    {
+        return '';
+    }
+}
+
+class CategoryWithDateTimeCast extends Model implements AdminModel
+{
+    use IsAdminModel;
+
+    protected $table = 'categories';
+
+    protected $casts = [
+        'published_at' => 'datetime'
+    ];
+
+    protected $guarded = [
+    ];
+
+    public function getAdminUrlAttribute(): string
+    {
+        return '';
+    }
+}
+
 class CategoryWithSearchable extends Model implements AdminModel
 {
     use IsAdminModel;
@@ -88,6 +126,56 @@ class AdminModelTest extends TestCase
         parent::setUp();
 
         $this->runMigrations();
+    }
+
+    /** @test */
+    public function it_can_get_list_of_date_fields(): void
+    {
+        $this->assertEquals([
+            'published_at' => 'Published At',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At'
+        ], CategoryWithDateCast::getDateFieldsList());
+    }
+
+    /** @test */
+    public function it_can_determine_if_an_attribute_is_an_allowed_date_field(): void
+    {
+        $this->assertTrue(CategoryWithDateCast::isAllowedDateField('published_at'));
+        $this->assertTrue(CategoryWithDateCast::isAllowedDateField('created_at'));
+        $this->assertTrue(CategoryWithDateCast::isAllowedDateField('updated_at'));
+        $this->assertFalse(CategoryWithDateCast::isAllowedDateField('name'));
+    }
+
+    /** @test */
+    public function it_can_determine_date_fields_from_date_casts(): void
+    {
+        $category = new CategoryWithDateCast();
+
+        $this->assertEquals(['published_at', 'created_at', 'updated_at'], $category->getDateAttributes());
+    }
+
+    /** @test */
+    public function it_can_determine_date_fields_from_datetime_casts(): void
+    {
+        $category = new CategoryWithDateTimeCast();
+
+        $this->assertEquals(['published_at', 'created_at', 'updated_at'], $category->getDateAttributes());
+    }
+
+    /** @test */
+    public function it_can_filter_models_by_date_range(): void
+    {
+        $category = new CategoryWithDateCast([
+            'name' => 'Apple',
+            'slug' => 'some-slug',
+            'published_at' => '2024-02-11'
+        ]);
+        $category->save();
+
+        $found = CategoryWithDateCast::dateBetween('published_at', '2024-02-10', '2024-02-12')->first();
+
+        $this->assertEquals($category->id, $found->id);
     }
 
     /** @test */
