@@ -712,21 +712,22 @@ if (! function_exists('random_id_or_generate')) {
         bool $generate = false
     ): mixed
     {
-        $id = null;
+        $id = $model_class::inRandomOrder();
 
-        if (! $generate) {
-            $id = $model_class::inRandomOrder();
-
-            foreach ($where as $field => $value) {
-                $id->where($field, $value);
-            }
-
-            $id = $return == 'object' ? $id->first() : $id->value($key);
+        foreach ($where as $field => $value) {
+            $id->where($field, $value);
         }
 
-        if (! $id) {
-            $id = $model_class::factory()
-                ->create($where);
+        $id = $return == 'object' ? $id->first() : $id->value($key);
+
+        if ((! $id) && $generate) {
+            $id = $model_class::factory();
+
+            if (method_exists($id, 'withRequiredRelations')) {
+                $id->withRequiredRelations();
+            }
+
+            $id = $id->create($where);
 
             if ($return != 'object') {
                 $id = $id->{$key};

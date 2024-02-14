@@ -2,8 +2,15 @@
 
 namespace Javaabu\Helpers\Testing;
 
+use App\Models\User;
+use Database\Seeders\DefaultUsersSeeder;
+use Database\Seeders\PermissionsSeeder;
+use Database\Seeders\RolesSeeder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Str;
+use Spatie\Permission\PermissionRegistrar;
+use Javaabu\Permissions\Models\Role;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -97,5 +104,140 @@ abstract class TestCase extends BaseTestCase
         }
 
         return trim(url($uri), '/');
+    }
+
+    /**
+     * Initialize the db
+     */
+    protected function seedDatabase()
+    {
+        $this->seed(PermissionsSeeder::class);
+    }
+
+    /**
+     * Acting as a specific user
+     *
+     * @param $email
+     * @param string $guard
+     */
+    protected function actingAsAdmin(
+        array $permissions = [],
+        $email = 'demo-admin@javaabu.com',
+        $role = 'test_role',
+        string $guard = 'web_admin'
+    )
+    {
+        $this->seedDatabase();
+
+        //find the user
+        $user = is_object($email) ? $email : $this->getActiveAdminUser($email, $role);
+
+        if ($permissions) {
+            $this->givePermissionTo($user, $permissions);
+        } else {
+            $this->reloadPermissions();
+        }
+
+        $this->actingAs($user, $guard);
+    }
+
+    /**
+     * Get active user
+     */
+    protected function getActiveAdminUser($email, $role = 'test_role'): User
+    {
+        // find the user
+        $user = User::whereEmail($email)->first();
+
+        // if missing, create
+        if (! $user) {
+            $user = User::factory()
+                ->active()
+                ->create([
+                    'email' => $email,
+                ]);
+        }
+
+        // assign role
+        if (! $user->hasRole($role)) {
+            $role = $this->getRole($role);
+
+            $user->assignRole($role);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Get role
+     */
+    protected function getRole($role, $guard = 'web_admin'): Role
+    {
+        // find the role
+        $role = Role::whereName($role)
+                    ->whereGuardName($guard)
+                    ->first();
+
+        // if missing, create
+        if (! $role) {
+            $role = Role::factory()
+                ->create([
+                    'name' => $role,
+                    'guard_name' => $guard
+                ]);
+        }
+
+        return $role;
+    }
+
+    /**
+     * Reloaded the permissions
+     *
+     * @return mixed
+     */
+    protected function reloadPermissions()
+    {
+        return app(PermissionRegistrar::class)->registerPermissions();
+    }
+
+    /**
+     * Revoke permission
+     *
+     * @param $user
+     * @param $permission
+     */
+    protected function revokePermissionTo($user, $permission)
+    {
+        $user->roles()
+            ->first()
+            ->revokePermissionTo($permission);
+
+        $this->reloadPermissions();
+    }
+
+    /**
+     * Grant permission
+     *
+     * @param $user
+     * @param $permission
+     */
+    protected function givePermissionTo($user, $permission)
+    {
+        $user->roles()
+            ->first()
+            ->givePermissionTo($permission);
+
+        $this->reloadPermissions();
+    }
+
+    protected function getFactory($class): Factory
+    {
+        $factory = $class::factory();
+
+        if (method_exists($factory, 'withRequiredRelations')) {
+            $factory->withRequiredRelations();
+        }
+
+        return $factory;
     }
 }
