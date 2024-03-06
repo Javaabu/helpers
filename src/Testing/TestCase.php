@@ -169,7 +169,7 @@ abstract class TestCase extends BaseTestCase
      * @param string $guard
      */
     protected function actingAsAdmin(
-        array $permissions = [],
+        $permissions = [],
         $email = 'demo-admin@javaabu.com',
         $role = 'test_role',
         string $guard = 'web_admin'

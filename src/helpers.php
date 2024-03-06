@@ -502,7 +502,7 @@ if (! function_exists('parse_date')) {
      * @param  string|Carbon  $date
      * @return Carbon|null
      */
-    function parse_date(string|Carbon $date): ?Carbon
+    function parse_date($date): ?Carbon
     {
         if ($date instanceof Carbon) {
             return $date;
