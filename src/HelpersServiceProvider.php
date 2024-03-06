@@ -2,6 +2,8 @@
 
 namespace Javaabu\Helpers;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -15,6 +17,36 @@ class HelpersServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerCustomValidationRules();
+
+        Carbon::macro('timeOfDay', function () {
+            $date = now();
+
+            $hour = $date->format('H');
+
+            if ($hour < 12 && $hour >= 4) {
+                return 'morning';
+            }
+
+            if ($hour > 12 && $hour < 17) {
+                return 'afternoon';
+            }
+
+            return 'evening';
+        });
+
+        Arr::macro('rootKeys', function (array $array) {
+            $keys = [];
+
+            foreach ($array as $key => $value) {
+                if (is_array($value)) {
+                    $keys[] = $key;
+                } else {
+                    $keys[] = $value;
+                }
+            }
+
+            return $keys;
+        });
     }
 
     protected function registerCustomValidationRules()
