@@ -6,14 +6,38 @@ use App\Models\User;
 use Database\Seeders\DefaultUsersSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Database\Seeders\RolesSeeder;
+use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Spatie\Permission\PermissionRegistrar;
 use Javaabu\Permissions\Models\Role;
 
 abstract class TestCase extends BaseTestCase
 {
+    public function setup(): void
+    {
+        parent::setUp();
+
+        Mail::fake();
+        Notification::fake();
+    }
+
+    /**
+     * Get the token for the user
+     * @param $user
+     * @param null $broker
+     * @return
+     */
+    protected function getResetToken($user, $broker = null)
+    {
+        return app(PasswordBrokerManager::class)
+            ->broker($broker)
+            ->createToken($user);
+    }
+
     /**
      * Visit the given URI with a POST request.
      *
@@ -122,8 +146,8 @@ abstract class TestCase extends BaseTestCase
      */
     protected function actingAsAdmin(
         array $permissions = [],
-        $email = 'demo-admin@javaabu.com',
-        $role = 'test_role',
+              $email = 'demo-admin@javaabu.com',
+              $role = 'test_role',
         string $guard = 'web_admin'
     )
     {
@@ -171,18 +195,18 @@ abstract class TestCase extends BaseTestCase
     /**
      * Get role
      */
-    protected function getRole($role, $guard = 'web_admin'): Role
+    protected function getRole($role_name, $guard = 'web_admin'): Role
     {
         // find the role
-        $role = Role::whereName($role)
-                    ->whereGuardName($guard)
-                    ->first();
+        $role = Role::whereName($role_name)
+            ->whereGuardName($guard)
+            ->first();
 
         // if missing, create
         if (! $role) {
             $role = Role::factory()
                 ->create([
-                    'name' => $role,
+                    'name' => $role_name,
                     'guard_name' => $guard
                 ]);
         }
