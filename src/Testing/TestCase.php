@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Spatie\Permission\PermissionRegistrar;
 use Javaabu\Permissions\Models\Role;
+use Database\Seeders\PermissionsSeeder;
 
 abstract class TestCase extends BaseTestCase
 {
