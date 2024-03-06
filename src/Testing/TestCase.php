@@ -182,8 +182,6 @@ abstract class TestCase extends BaseTestCase
 
         if ($permissions) {
             $this->givePermissionTo($user, $permissions);
-        } else {
-            $this->reloadPermissions();
         }
 
         $this->actingAs($user, $guard);
@@ -239,16 +237,6 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Reloaded the permissions
-     *
-     * @return mixed
-     */
-    protected function reloadPermissions()
-    {
-        return app(PermissionRegistrar::class)->registerPermissions();
-    }
-
-    /**
      * Revoke permission
      *
      * @param $user
@@ -259,8 +247,6 @@ abstract class TestCase extends BaseTestCase
         $user->roles()
             ->first()
             ->revokePermissionTo($permission);
-
-        $this->reloadPermissions();
     }
 
     /**
@@ -274,8 +260,6 @@ abstract class TestCase extends BaseTestCase
         $user->roles()
             ->first()
             ->givePermissionTo($permission);
-
-        $this->reloadPermissions();
     }
 
     protected function getFactory($class): Factory
