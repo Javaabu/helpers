@@ -12,6 +12,7 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use Javaabu\Permissions\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Javaabu\Permissions\Models\Role;
 
@@ -138,18 +139,12 @@ abstract class TestCase extends BaseTestCase
         $this->seed(PermissionsSeeder::class);
     }
 
-    /**
-     * Acting as a specific user
-     *
-     * @param $email
-     * @param string $guard
-     */
     protected function actingAsAdmin(
         array $permissions = [],
-              $email = 'demo-admin@javaabu.com',
-              $role = 'test_role',
+        $email = 'demo-admin@javaabu.com',
+        $role = 'test_role',
         string $guard = 'web_admin'
-    )
+    ): void
     {
         $this->seedDatabase();
 
@@ -157,9 +152,17 @@ abstract class TestCase extends BaseTestCase
         $user = is_object($email) ? $email : $this->getActiveAdminUser($email, $role);
 
         if ($permissions) {
+            // If input permission starts with *, then get all permissions for the model
+            if (is_string($permissions) && str($permissions)->startsWith('*')) {
+                $filter = str($permissions)->afterLast('*');
+                $permissions = Permission::query()
+                    ->where('model', $filter)
+                    ->pluck('name')
+                    ->toArray();
+
+            }
+
             $this->givePermissionTo($user, $permissions);
-        } else {
-            $this->reloadPermissions();
         }
 
         $this->actingAs($user, $guard);
