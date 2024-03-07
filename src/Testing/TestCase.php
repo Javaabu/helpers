@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use Javaabu\Permissions\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Javaabu\Permissions\Models\Role;
 use Database\Seeders\PermissionsSeeder;
@@ -181,6 +182,16 @@ abstract class TestCase extends BaseTestCase
         $user = is_object($email) ? $email : $this->getActiveAdminUser($email, $role);
 
         if ($permissions) {
+            // If input permission starts with *, then get all permissions for the model
+            if (is_string($permissions) && str($permissions)->startsWith('*')) {
+                $filter = str($permissions)->afterLast('*');
+                $permissions = Permission::query()
+                    ->where('model', $filter)
+                    ->pluck('name')
+                    ->toArray();
+
+            }
+
             $this->givePermissionTo($user, $permissions);
         }
 
