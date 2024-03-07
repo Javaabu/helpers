@@ -3,27 +3,50 @@
 namespace Javaabu\Helpers\Testing;
 
 use App\Models\User;
-use Database\Seeders\DefaultUsersSeeder;
-use Database\Seeders\PermissionsSeeder;
-use Database\Seeders\RolesSeeder;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
-use Javaabu\Permissions\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Javaabu\Permissions\Models\Role;
+use Database\Seeders\PermissionsSeeder;
 
 abstract class TestCase extends BaseTestCase
 {
-    public function setup(): void
+    /**
+     * Setup the test environment.
+     *
+     * @return void
+     */
+    protected function setUp(): void
     {
         parent::setUp();
 
         Mail::fake();
         Notification::fake();
+    }
+
+    /**
+     * Assert that the password equals certain value
+     * @param $expected
+     * @param $actual
+     */
+    public function assertPasswordEquals($expected, $actual)
+    {
+        $this->assertTrue(Hash::check($expected, $actual), "Expected password to be $expected");
+    }
+
+    /**
+     * Assert that the password does not equals certain value
+     * @param $expected
+     * @param $actual
+     */
+    public function assertPasswordNotEquals($expected, $actual)
+    {
+        $this->assertFalse(Hash::check($expected, $actual), "Expected password to not be $expected");
     }
 
     /**
@@ -139,12 +162,18 @@ abstract class TestCase extends BaseTestCase
         $this->seed(PermissionsSeeder::class);
     }
 
+    /**
+     * Acting as a specific user
+     *
+     * @param $email
+     * @param string $guard
+     */
     protected function actingAsAdmin(
-        array $permissions = [],
+        $permissions = [],
         $email = 'demo-admin@javaabu.com',
         $role = 'test_role',
         string $guard = 'web_admin'
-    ): void
+    )
     {
         $this->seedDatabase();
 
@@ -152,16 +181,6 @@ abstract class TestCase extends BaseTestCase
         $user = is_object($email) ? $email : $this->getActiveAdminUser($email, $role);
 
         if ($permissions) {
-            // If input permission starts with *, then get all permissions for the model
-            if (is_string($permissions) && str($permissions)->startsWith('*')) {
-                $filter = str($permissions)->afterLast('*');
-                $permissions = Permission::query()
-                    ->where('model', $filter)
-                    ->pluck('name')
-                    ->toArray();
-
-            }
-
             $this->givePermissionTo($user, $permissions);
         }
 
@@ -202,8 +221,8 @@ abstract class TestCase extends BaseTestCase
     {
         // find the role
         $role = Role::whereName($role_name)
-            ->whereGuardName($guard)
-            ->first();
+                    ->whereGuardName($guard)
+                    ->first();
 
         // if missing, create
         if (! $role) {
@@ -218,16 +237,6 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Reloaded the permissions
-     *
-     * @return mixed
-     */
-    protected function reloadPermissions()
-    {
-        return app(PermissionRegistrar::class)->registerPermissions();
-    }
-
-    /**
      * Revoke permission
      *
      * @param $user
@@ -238,8 +247,6 @@ abstract class TestCase extends BaseTestCase
         $user->roles()
             ->first()
             ->revokePermissionTo($permission);
-
-        $this->reloadPermissions();
     }
 
     /**
@@ -253,8 +260,6 @@ abstract class TestCase extends BaseTestCase
         $user->roles()
             ->first()
             ->givePermissionTo($permission);
-
-        $this->reloadPermissions();
     }
 
     protected function getFactory($class): Factory

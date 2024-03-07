@@ -14,7 +14,7 @@ trait HasStatus
     public function getStatusLabel($status)
     {
         $status_class = static::$status_class;
-        return $status_class::getLabel($status);
+        return $status_class::names($status);
     }
 
     /**
@@ -33,7 +33,7 @@ trait HasStatus
     public function getStatusSlug($status)
     {
         $status_class = static::$status_class;
-        return $status_class::getSlug($status);
+        return $status_class::slugs($status);
     }
 
     /**
