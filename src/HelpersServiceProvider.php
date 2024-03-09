@@ -210,6 +210,8 @@ class HelpersServiceProvider extends ServiceProvider
         foreach (glob(app_path().'/Helpers/*.php') as $filename) {
             require_once($filename);
         }
+
+        $this->registerMiddlewareAliases();
     }
 
     public function registerMiddlewareAliases(): void
