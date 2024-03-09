@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
+use Laravel\Passport\Passport;
 use Spatie\Permission\PermissionRegistrar;
 use Javaabu\Permissions\Models\Role;
 use Database\Seeders\PermissionsSeeder;
@@ -271,5 +273,44 @@ abstract class TestCase extends BaseTestCase
         }
 
         return $factory;
+    }
+
+    /**
+     * Make a json API call
+     *
+     * @param $method
+     * @param $uri
+     * @param array $data
+     * @param string $access_cookie
+     * @param array $headers
+     * @param array $cookies
+     * @return TestResponse
+     */
+    public function jsonApi($method, $uri, array $data = [], string $access_cookie = '', array $headers = [], array $cookies = [])
+    {
+        $files = $this->extractFilesFromDataArray($data);
+
+        $content = json_encode($data);
+
+        $headers = array_merge([
+            'CONTENT_LENGTH' => mb_strlen($content, '8bit'),
+            'CONTENT_TYPE' => 'application/json',
+            'Accept' => 'application/json',
+            'X-CSRF-TOKEN' => session()->token(),
+        ], $headers);
+
+        $cookies = array_merge([
+            Passport::cookie() => $access_cookie,
+        ], $cookies);
+
+        return $this->call(
+            $method,
+            $uri,
+            [],
+            $cookies,
+            $files,
+            $this->transformHeadersToServerVars($headers),
+            $content
+        );
     }
 }
