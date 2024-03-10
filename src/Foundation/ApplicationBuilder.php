@@ -36,7 +36,7 @@ class ApplicationBuilder extends BaseApplicationBuilder
     {
         return function () use ($web, $api, $pages, $health, $apiPrefix, $then) {
             if (is_string($api) && realpath($api) !== false) {
-                Route::middleware('api')->prefix($apiPrefix)->group($api)->as('api.');
+                Route::middleware('api')->as('api.')->prefix($apiPrefix)->group($api);
             }
 
             if (is_string($health)) {
