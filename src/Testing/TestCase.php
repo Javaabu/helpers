@@ -4,12 +4,18 @@ namespace Javaabu\Helpers\Testing;
 
 use App\Models\User;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
+use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
+use Laravel\Passport\ApiTokenCookieFactory;
+use Laravel\Passport\Client;
+use Laravel\Passport\ClientRepository;
+use Laravel\Passport\Passport;
 use Javaabu\Permissions\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Javaabu\Permissions\Models\Role;
@@ -232,8 +238,8 @@ abstract class TestCase extends BaseTestCase
     {
         // find the role
         $role = Role::whereName($role_name)
-                    ->whereGuardName($guard)
-                    ->first();
+            ->whereGuardName($guard)
+            ->first();
 
         // if missing, create
         if (! $role) {
@@ -282,5 +288,170 @@ abstract class TestCase extends BaseTestCase
         }
 
         return $factory;
+    }
+
+    /**
+     * Make a json API call
+     *
+     * @param $method
+     * @param $uri
+     * @param array $data
+     * @param string $access_cookie
+     * @param array $headers
+     * @param array $cookies
+     * @return TestResponse
+     */
+    public function jsonApi($method, $uri, array $data = [], string $access_cookie = '', array $headers = [], array $cookies = [])
+    {
+        $files = $this->extractFilesFromDataArray($data);
+
+        $content = json_encode($data);
+
+        $headers = array_merge([
+            'CONTENT_LENGTH' => mb_strlen($content, '8bit'),
+            'CONTENT_TYPE' => 'application/json',
+            'Accept' => 'application/json',
+            'X-CSRF-TOKEN' => session()->token(),
+        ], $headers);
+
+        $cookies = array_merge([
+            Passport::cookie() => $access_cookie,
+        ], $cookies);
+
+        return $this->call(
+            $method,
+            $uri,
+            [],
+            $cookies,
+            $files,
+            $this->transformHeadersToServerVars($headers),
+            $content
+        );
+    }
+
+    /**
+     * Acting as a specific API user
+     * @param mixed $email
+     * @param array $scopes
+     */
+    protected function actingAsApiUser($email, $scopes = ['read', 'write'])
+    {
+        $this->seedDatabase();
+
+        //find the user
+        $user = is_object($email) ? $email : $this->getActiveAdminUser($email);
+
+        Passport::actingAs($user, $scopes);
+    }
+
+    /**
+     * Get an access token
+     * @param string $grant_type
+     * @param array $scopes
+     * @param array $params
+     * @param Client|null $client
+     */
+    protected function getAccessToken(string $grant_type = 'client_credentials', array $scopes = ['read', 'write'], array $params = [], Client $client = null)
+    {
+        if (empty($client)) {
+            // create a new client
+            $user = $this->getActiveAdminUser('demo-user@javaabu.com');
+            $client = (new ClientRepository())->create(
+                $user->id,
+                'Test Client',
+                'http://localhost'
+            );
+        }
+
+        $request_params = array_merge([
+            'client_id' => $client->id,
+            'client_secret' => $client->secret,
+            'grant_type' => $grant_type,
+            'scope' => implode(' ', $scopes),
+        ], $params);
+
+        // make the request
+        $response = $this->json('post', '/api/v1/oauth/token', $request_params)
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'token_type',
+                'expires_in',
+                'access_token',
+            ]);
+
+        return ($response->json())['access_token'];
+    }
+
+    /**
+     * Get client access token
+     * @param array $scopes
+     * @return mixed
+     */
+    protected function getClientAccessToken(array $scopes = ['read', 'write']): mixed
+    {
+        return $this->getAccessToken('client_credentials', $scopes);
+    }
+
+    /**
+     * Get client access token
+     * @param $username
+     * @param $user_type
+     * @param string $password
+     * @param array $scopes
+     * @return mixed
+     */
+    protected function getPasswordAccessToken($username, $user_type, string $password = 'Jv7528222', array $scopes = ['read', 'write']): mixed
+    {
+        // create a new password client
+        $client = (new ClientRepository())->create(
+            $this->getActiveAdminUser($username)->id,
+            'Test Client',
+            'http://localhost',
+            false,
+            true
+        );
+
+        return $this->getAccessToken(
+            'password',
+            $scopes,
+            compact('username', 'user_type', 'password'),
+            $client
+        );
+    }
+
+    /**
+     * Get user access token
+     *
+     * @param $email
+     * @param array $scopes
+     * @return mixed
+     */
+    protected function getUserAccessToken($email, array $scopes = ['read', 'write']): mixed
+    {
+        $user = is_object($email) ? $email : $this->getActiveUser($email);
+        return $this->getPasswordAccessToken($user->email, 'user', 'Jv7528222', $scopes);
+    }
+
+    /**
+     * With OAuth Cookie
+     *
+     * @param $user
+     * @return string
+     */
+    protected function getOAuthCookie($user)
+    {
+        $cookie_factory = new ApiTokenCookieFactory(app('config'), app('encrypter'));
+
+        // initialize the CSRF Token
+        session()->start();
+
+        $identifier = ($user && $user->is_active) ? $user->getPassportCookieIdentifier() : null;
+
+        $cookie = $cookie_factory->make($identifier, session()->token());
+
+        return app('encrypter')->encrypt(
+            CookieValuePrefix::create($cookie->getName(), app('encrypter')->getKey()).$cookie->getValue(),
+            Passport::$unserializesCookies
+        );
     }
 }

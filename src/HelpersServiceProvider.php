@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Javaabu\Helpers\Http\Middleware\JsonOnly;
 
 class HelpersServiceProvider extends ServiceProvider
 {
@@ -209,5 +210,12 @@ class HelpersServiceProvider extends ServiceProvider
         foreach (glob(app_path().'/Helpers/*.php') as $filename) {
             require_once($filename);
         }
+
+        $this->registerMiddlewareAliases();
+    }
+
+    public function registerMiddlewareAliases(): void
+    {
+        app('router')->aliasMiddleware('json', JsonOnly::class);
     }
 }
