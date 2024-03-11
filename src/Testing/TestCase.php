@@ -32,6 +32,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
+        $this->withoutVite();
         Mail::fake();
         Notification::fake();
     }
