@@ -285,7 +285,7 @@ abstract class TestCase extends BaseTestCase
         $factory = $class::factory();
 
         if (method_exists($factory, 'withRequiredRelations')) {
-            $factory->withRequiredRelations();
+            return $factory->withRequiredRelations();
         }
 
         return $factory;
