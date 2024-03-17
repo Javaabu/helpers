@@ -335,14 +335,18 @@ abstract class TestCase extends BaseTestCase
      * @param mixed $email
      * @param array $scopes
      */
-    protected function actingAsApiUser($email, $scopes = ['read', 'write'])
+    protected function actingAsApiUser($email, $scopes = ['read', 'write'], $guard = null)
     {
         $this->seedDatabase();
 
         //find the user
         $user = is_object($email) ? $email : $this->getActiveAdminUser($email);
 
-        Passport::actingAs($user, $scopes);
+        if (! $guard) {
+            $guard = $user instanceof User ? 'api_admin' : 'api_' . ($user->getMorphClass());
+        }
+
+        Passport::actingAs($user, $scopes, $guard);
     }
 
     /**
