@@ -724,7 +724,7 @@ if (! function_exists('random_id_or_generate')) {
             $id = $model_class::factory();
 
             if (method_exists($id, 'withRequiredRelations')) {
-                $id->withRequiredRelations();
+                $id = $id->withRequiredRelations();
             }
 
             $id = $id->create($where);

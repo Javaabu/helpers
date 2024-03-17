@@ -18,6 +18,8 @@ abstract class AllowedMimeTypes
             'image/tiff',
             'image/x-citrix-png',
             'image/x-png',
+            'image/svg+xml',
+            'image/svg',
         ],
 
         'icon' => [
