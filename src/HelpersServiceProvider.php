@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Javaabu\Helpers\Http\Middleware\AllowOnlySpecificUserType;
 use Javaabu\Helpers\Http\Middleware\JsonOnly;
 
 class HelpersServiceProvider extends ServiceProvider
@@ -217,5 +218,6 @@ class HelpersServiceProvider extends ServiceProvider
     public function registerMiddlewareAliases(): void
     {
         app('router')->aliasMiddleware('json', JsonOnly::class);
+        app('router')->aliasMiddleware('only', AllowOnlySpecificUserType::class);
     }
 }
