@@ -57,6 +57,11 @@ abstract class AllowedMimeTypes
         ]
     ];
 
+    public static function registerMimeTypes(string $key, array $mime_types): void
+    {
+        self::$allowed_mime_types[$key] = $mime_types;
+    }
+
     /**
      * Get the allowed mime types for the specific type
      *
