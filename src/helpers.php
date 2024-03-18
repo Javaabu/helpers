@@ -709,16 +709,21 @@ if (! function_exists('random_id_or_generate')) {
         string $key = 'id',
         array $where = [],
         string $return = 'value',
-        bool $generate = false
+        bool $generate = false,
+        bool $unique = false
     ): mixed
     {
-        $id = $model_class::inRandomOrder();
+        $id = null;
+        
+        if (! ($unique && $generate)) {
+            $id = $model_class::inRandomOrder();
 
-        foreach ($where as $field => $value) {
-            $id->where($field, $value);
+            foreach ($where as $field => $value) {
+                $id->where($field, $value);
+            }
+
+            $id = $return == 'object' ? $id->first() : $id->value($key);
         }
-
-        $id = $return == 'object' ? $id->first() : $id->value($key);
 
         if ((! $id) && $generate) {
             $id = $model_class::factory();
