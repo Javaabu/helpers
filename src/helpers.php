@@ -714,7 +714,7 @@ if (! function_exists('random_id_or_generate')) {
     ): mixed
     {
         $id = null;
-        
+
         if (! ($unique && $generate)) {
             $id = $model_class::inRandomOrder();
 
