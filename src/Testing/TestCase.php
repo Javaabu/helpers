@@ -186,29 +186,53 @@ abstract class TestCase extends BaseTestCase
         $this->seedDatabase();
 
         //find the user
-        $user = is_object($email) ? $email : $this->getActiveAdminUser($email, $role);
+        if (is_object($email)) {
+            $user = $email;
 
-        if ($permissions) {
-            // If input permission starts with *, then get all permissions for the model
-            if (is_string($permissions) && str($permissions)->startsWith('*')) {
-                $filter = str($permissions)->afterLast('*');
-                $permissions = Permission::query()
-                    ->where('model', $filter)
-                    ->pluck('name')
-                    ->toArray();
-
+            if ($permissions) {
+                $this->givePermissionTo($user, $permissions);
             }
-
-            $this->givePermissionTo($user, $permissions);
+        } else {
+            $user = $this->getActiveAdminUser($email, $role, $permissions);
         }
 
         $this->actingAs($user, $guard);
     }
 
     /**
+     * Acting as a api admin user
+     *
+     * @param $email
+     * @param string $guard
+     */
+    protected function actingAsApiAdmin(
+        $permissions = [],
+        $email = 'demo-admin@javaabu.com',
+        $role = 'test_role',
+        string $guard = 'api_admin',
+        $scopes = ['read', 'write']
+    )
+    {
+        $this->seedDatabase();
+
+        //find the user
+        if (is_object($email)) {
+            $user = $email;
+
+            if ($permissions) {
+                $this->givePermissionTo($user, $permissions);
+            }
+        } else {
+            $user = $this->getActiveAdminUser($email, $role, $permissions);
+        }
+
+        $this->actingAsApiUser($user, $scopes, $guard);
+    }
+
+    /**
      * Get active user
      */
-    protected function getActiveAdminUser($email, $role = 'test_role'): User
+    protected function getActiveAdminUser($email, $role = 'test_role', $permissions = []): User
     {
         // find the user
         $user = User::whereEmail($email)->first();
@@ -227,6 +251,10 @@ abstract class TestCase extends BaseTestCase
             $role = $this->getRole($role);
 
             $user->assignRole($role);
+        }
+
+        if ($permissions) {
+            $this->givePermissionTo($user, $permissions);
         }
 
         return $user;
@@ -273,11 +301,21 @@ abstract class TestCase extends BaseTestCase
      * @param $user
      * @param $permission
      */
-    protected function givePermissionTo($user, $permission)
+    protected function givePermissionTo($user, $permissions)
     {
+        // If input permission starts with *, then get all permissions for the model
+        if (is_string($permissions) && str($permissions)->startsWith('*')) {
+            $filter = str($permissions)->afterLast('*');
+            $permissions = Permission::query()
+                ->where('model', $filter)
+                ->pluck('name')
+                ->toArray();
+
+        }
+
         $user->roles()
             ->first()
-            ->givePermissionTo($permission);
+            ->givePermissionTo($permissions);
     }
 
     protected function getFactory($class): Factory
