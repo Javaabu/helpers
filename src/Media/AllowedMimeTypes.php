@@ -104,9 +104,11 @@ abstract class AllowedMimeTypes
      * @param  bool    $as_array
      * @return string|array
      */
-    public static function getValidationRule(string $type, bool $as_array = false): array|string
+    public static function getValidationRule(string $type, bool $as_array = false, ?int $max_size = null): array|string
     {
-        $max_size = $type == 'image' ? get_setting('max_image_file_size') : get_setting('max_upload_file_size');
+        if (is_null($max_size)) {
+            $max_size = $type == 'image' ? get_setting('max_image_file_size') : get_setting('max_upload_file_size');
+        }
 
         $rules = [
             'nullable',
