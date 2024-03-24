@@ -25,9 +25,11 @@ trait UpdateMedia
             //remove the existing file
             $this->clearMediaCollection($collection);
 
+            $original_file_name =  app(config('media-library.file_namer'))->originalFileName($file->getClientOriginalName());
+
             // add the new file
             return $this->addMedia($file)
-                //->usingFileName(Str::slug(Str::random(8)).'.'.$file->guessExtension())
+                ->usingFileName(Str::slug($original_file_name . '-' .  Str::random(4)).'.'.$file->guessExtension())
                 ->toMediaCollection($collection);
         } elseif ($request->exists($key)) {
             //remove file if the parameter is empty
