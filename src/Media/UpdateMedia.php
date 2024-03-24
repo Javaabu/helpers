@@ -27,7 +27,7 @@ trait UpdateMedia
 
             // add the new file
             return $this->addMedia($file)
-                ->usingFileName(Str::slug(Str::random(8)).'.'.$file->guessExtension())
+                //->usingFileName(Str::slug(Str::random(8)).'.'.$file->guessExtension())
                 ->toMediaCollection($collection);
         } elseif ($request->exists($key)) {
             //remove file if the parameter is empty
