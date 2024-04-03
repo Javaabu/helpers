@@ -4,6 +4,7 @@ namespace Javaabu\Helpers\Enums;
 
 
 use BackedEnum;
+use Illuminate\Support\Str;
 
 trait NativeEnumsTrait
 {
@@ -20,6 +21,25 @@ trait NativeEnumsTrait
     public static function getKeys(): array
     {
         return array_column(self::cases(), 'value');
+    }
+
+    public static function labels(): array
+    {
+        return static::getLabels();
+    }
+
+    public static function getLabels(): array
+    {
+        $cases = static::cases();
+
+        $labels = [];
+
+        /** @var static $case */
+        foreach ($cases as $case) {
+            $labels[$case->value] = __(slug_to_title($case->name));
+        }
+
+        return $labels;
     }
 
     public static function slugs(string|BackedEnum $input)

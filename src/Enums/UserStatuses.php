@@ -32,13 +32,4 @@ enum UserStatuses: string implements IsEnum
     {
         return self::messages()[$key] ?? '';
     }
-
-    public static function labels(): array
-    {
-        return [
-            self::APPROVED->value => __("Approved"),
-            self::PENDING->value  => __("Pending"),
-            self::BANNED->value   => __("Banned"),
-        ];
-    }
 }
