@@ -769,3 +769,27 @@ if (! function_exists('request_ip')) {
         }
     }
 }
+
+if (! function_exists('format_currency')) {
+    /**
+     * Format currency
+     * @param $value
+     * @param string $code
+     * @param null $locale
+     * @return string
+     */
+    function format_currency($value, string $code = 'MVR', $locale = null): string
+    {
+        // include decimals, only if it has any
+        $precision = floor($value) == $value ? 0 : 2;
+
+        if (! $code) {
+            return number_format($value, $precision);
+        }
+
+        return __(':code :value', [
+            'code'  => __($code, [], $locale),
+            'value' => number_format($value, $precision),
+        ], $locale);
+    }
+}
