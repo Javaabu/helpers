@@ -793,3 +793,25 @@ if (! function_exists('format_currency')) {
         ], $locale);
     }
 }
+
+if (! function_exists('current_portal')) {
+
+    function current_portal(): string
+    {
+        $host = RequestFacade::getHost();
+
+        return match ($host) {
+            config('app.admin_domain') => 'admin',
+            default => 'public',
+        };
+
+    }
+}
+
+if (! function_exists('is_admin_portal')) {
+
+    function is_admin_portal(): string
+    {
+        return current_portal() == 'admin';
+    }
+}
