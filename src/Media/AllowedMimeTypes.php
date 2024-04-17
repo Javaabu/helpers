@@ -132,4 +132,20 @@ abstract class AllowedMimeTypes
 
         return $as_array ? $rules : implode('|', $rules);
     }
+
+    /**
+     * Get the type from the mime type
+     * @param string $mime_type
+     * @return string|null
+     */
+    public static function getType(string $mime_type): ?string
+    {
+        foreach (self::$allowed_mime_types as $type => $mime_types) {
+            if (in_array($mime_type, $mime_types)) {
+                return $type;
+            }
+        }
+
+        return null;
+    }
 }
