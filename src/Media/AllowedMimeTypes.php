@@ -65,12 +65,24 @@ abstract class AllowedMimeTypes
     /**
      * Get the allowed mime types for the specific type
      *
-     * @param  string  $type
+     * @param  string|array  $type
      * @return array
      */
-    public static function getAllowedMimeTypes(string $type): array
+    public static function getAllowedMimeTypes(string|array $type): array
     {
-        return self::$allowed_mime_types[$type] ?? [];
+        if (is_array($type)) {
+            $mime_types = [];
+
+            foreach ($type as $one_type) {
+                if (isset(self::$allowed_mime_types[$one_type])) {
+                    $mime_types[] = self::$allowed_mime_types[$one_type];
+                }
+            }
+
+            return Arr::flatten($mime_types);
+        }
+
+        return $type ? (self::$allowed_mime_types[$type] ?? []) : Arr::flatten(self::$allowed_mime_types);
     }
 
     /**
