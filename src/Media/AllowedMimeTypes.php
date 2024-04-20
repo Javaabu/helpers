@@ -5,6 +5,8 @@
 
 namespace Javaabu\Helpers\Media;
 
+use Illuminate\Support\Arr;
+
 abstract class AllowedMimeTypes
 {
     /**
@@ -65,12 +67,24 @@ abstract class AllowedMimeTypes
     /**
      * Get the allowed mime types for the specific type
      *
-     * @param  string  $type
+     * @param  string|array  $type
      * @return array
      */
-    public static function getAllowedMimeTypes(string $type): array
+    public static function getAllowedMimeTypes(string|array $type): array
     {
-        return self::$allowed_mime_types[$type] ?? [];
+        if (is_array($type)) {
+            $mime_types = [];
+
+            foreach ($type as $one_type) {
+                if (isset(self::$allowed_mime_types[$one_type])) {
+                    $mime_types[] = self::$allowed_mime_types[$one_type];
+                }
+            }
+
+            return Arr::flatten($mime_types);
+        }
+
+        return $type ? (self::$allowed_mime_types[$type] ?? []) : Arr::flatten(self::$allowed_mime_types);
     }
 
     /**
@@ -117,5 +131,21 @@ abstract class AllowedMimeTypes
         ];
 
         return $as_array ? $rules : implode('|', $rules);
+    }
+
+    /**
+     * Get the type from the mime type
+     * @param string $mime_type
+     * @return string|null
+     */
+    public static function getType(string $mime_type): ?string
+    {
+        foreach (self::$allowed_mime_types as $type => $mime_types) {
+            if (in_array($mime_type, $mime_types)) {
+                return $type;
+            }
+        }
+
+        return null;
     }
 }
