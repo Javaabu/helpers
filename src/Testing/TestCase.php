@@ -443,7 +443,7 @@ abstract class TestCase extends BaseTestCase
      * @param array $scopes
      * @return mixed
      */
-    protected function getPasswordAccessToken($username, $user_type, string $password = 'Jv7528222', array $scopes = ['read', 'write']): mixed
+    protected function getPasswordAccessToken($username, $user_type, string $password, array $scopes = ['read', 'write']): mixed
     {
         // create a new password client
         $client = (new ClientRepository())->create(
@@ -469,10 +469,10 @@ abstract class TestCase extends BaseTestCase
      * @param array $scopes
      * @return mixed
      */
-    protected function getUserAccessToken($email, array $scopes = ['read', 'write']): mixed
+    protected function getUserAccessToken($email, string $password, array $scopes = ['read', 'write']): mixed
     {
         $user = is_object($email) ? $email : $this->getActiveUser($email);
-        return $this->getPasswordAccessToken($user->email, 'user', 'Jv7528222', $scopes);
+        return $this->getPasswordAccessToken($user->email, 'user', $password, $scopes);
     }
 
     /**
