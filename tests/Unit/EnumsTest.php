@@ -2,7 +2,7 @@
 
 namespace Javaabu\Helpers\Tests\Unit;
 
-use Javaabu\Helpers\Enums\UserStatuses;
+use Javaabu\Helpers\Enums\PublishStatuses;
 use Javaabu\Helpers\Tests\TestCase;
 
 class EnumsTest extends TestCase
@@ -10,11 +10,12 @@ class EnumsTest extends TestCase
     /** @test */
     public function it_can_generate_enum_label()
     {
-        $this->assertEquals('Pending', UserStatuses::PENDING->getLabel());
+        $this->assertEquals('Pending', PublishStatuses::PENDING->getLabel());
         $this->assertEquals([
-            'approved' => 'Approved',
-            'pending' => 'Pending',
-            'banned' => 'Banned'
-        ], UserStatuses::getLabels());
+            'draft'     => 'Draft',
+            'pending'   => 'Pending',
+            'published' => 'Published',
+            'rejected'  => 'Rejected',
+        ], PublishStatuses::getLabels());
     }
 }

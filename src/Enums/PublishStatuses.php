@@ -11,14 +11,4 @@ enum PublishStatuses: string implements IsEnum
     case PENDING = 'pending';
     case PUBLISHED = 'published';
     case REJECTED = 'rejected';
-
-    public static function labels(): array
-    {
-        return [
-            self::DRAFT->value     => __("Draft"),
-            self::PENDING->value   => __("Pending"),
-            self::PUBLISHED->value => __("Published"),
-            self::REJECTED->value  => __("Rejected"),
-        ];
-    }
 }
