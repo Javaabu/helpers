@@ -5,6 +5,7 @@
 
 namespace Javaabu\Helpers\Media;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Arr;
 
 abstract class AllowedMimeTypes
