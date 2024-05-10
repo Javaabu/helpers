@@ -148,4 +148,31 @@ abstract class AllowedMimeTypes
 
         return null;
     }
+
+    /**
+     * Get the validation rule for the given type of attachment
+     *
+     * @param string|null $type
+     * @return array
+     */
+    public static function getAttachmentValidationRule(string $type = null): array
+    {
+        $rules = [
+            'nullable',
+            Rule::exists('media', 'id')->whereIn('mime_type', AllowedMimeTypes::getAllowedMimeTypes($type)),
+        ];
+
+        return $rules;
+    }
+
+    /**
+     * Get the the extension for the mime type
+     *
+     * @param $mime
+     * @return mixed|string|null
+     */
+    public static function getExtension($mime)
+    {
+        return isset(self::$mime_type_extensions[$mime]) ? self::$mime_type_extensions[$mime] : null;
+    }
 }
