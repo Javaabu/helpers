@@ -135,22 +135,6 @@ abstract class AllowedMimeTypes
     }
 
     /**
-     * Get the validation rule for the given type of attachment
-     *
-     * @param string|null $type
-     * @return array
-     */
-    public static function getAttachmentValidationRule(string $type = null): array
-    {
-        $rules = [
-            'nullable',
-            Rule::exists('media', 'id')->whereIn('mime_type', AllowedMimeTypes::getAllowedMimeTypes($type)),
-        ];
-
-        return $rules;
-    }
-
-    /**
      * Get the type from the mime type
      * @param string $mime_type
      * @return string|null
