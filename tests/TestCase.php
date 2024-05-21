@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Javaabu\Helpers\HelpersServiceProvider;
+use Javaabu\Helpers\Tests\TestSupport\Providers\TestServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -19,12 +20,15 @@ abstract class TestCase extends BaseTestCase
 
         $this->app['config']->set('session.serialization', 'php');
 
-        View::addLocation(__DIR__ . '/Feature/views');
+        View::addLocation(__DIR__ . '/TestSupport/views');
     }
 
     protected function getPackageProviders($app): array
     {
-        return [HelpersServiceProvider::class];
+        return [
+            HelpersServiceProvider::class,
+            TestServiceProvider::class
+        ];
     }
 
     protected function registerTestRoute($uri, callable $post = null): self
@@ -74,6 +78,6 @@ abstract class TestCase extends BaseTestCase
 
     protected function getTestStubPath(string $name): string
     {
-        return __DIR__ . '/stubs/' . $name;
+        return __DIR__ . '/TestSupport/stubs/' . $name;
     }
 }
