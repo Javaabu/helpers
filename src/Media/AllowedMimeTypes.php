@@ -107,7 +107,7 @@ abstract class AllowedMimeTypes
      * @param  string  $type
      * @return boolean
      */
-    public static function isAllowedMimeType(string $mime_type, string $type): bool
+    public static function isAllowedMimeType(string $mime_type, array|string $type): bool
     {
         return in_array($mime_type, self::getAllowedMimeTypes($type));
     }
