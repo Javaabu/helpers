@@ -23,6 +23,8 @@ class HelpersServiceProviderTest extends TestCase
     /** @test */
     public function it_loads_local_helpers()
     {
+        $this->withoutExceptionHandling();
+
         $this->registerTestRoute('helpers-test');
 
         $this->get('/helpers-test')

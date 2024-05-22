@@ -3,10 +3,10 @@
 namespace Javaabu\Helpers\Tests\Feature;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Helpers\AdminModel\AdminModel;
 use Javaabu\Helpers\AdminModel\IsAdminModel;
 use Javaabu\Helpers\Tests\TestCase;
-use Javaabu\Helpers\Tests\InteractsWithDatabase;
 
 class CategoryWithDateCast extends Model implements AdminModel
 {
@@ -119,14 +119,7 @@ class CategoryWithoutSearchable extends Model implements AdminModel
 
 class AdminModelTest extends TestCase
 {
-    use InteractsWithDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->runMigrations();
-    }
+    use RefreshDatabase;
 
     /** @test */
     public function it_can_get_list_of_date_fields(): void

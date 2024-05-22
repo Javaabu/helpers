@@ -18,6 +18,12 @@ class HelpersServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../lang' => lang_path('/'),
+            ], 'helpers-translation-overrides');
+        }
+
         $this->registerCustomValidationRules();
 
         Carbon::macro('timeOfDay', function () {
