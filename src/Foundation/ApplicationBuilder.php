@@ -2,6 +2,7 @@
 
 namespace Javaabu\Helpers\Foundation;
 
+use Closure;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Configuration\ApplicationBuilder as BaseApplicationBuilder;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -18,21 +19,22 @@ class ApplicationBuilder extends BaseApplicationBuilder
     /**
      * Create the routing callback for the application.
      *
-     * @param  string|null    $web
-     * @param  string|null    $api
-     * @param  string|null    $pages
-     * @param  string|null    $health
-     * @param  string         $apiPrefix
-     * @param  callable|null  $then
-     * @return \Closure
+     * @param  array|string|null  $web
+     * @param  array|string|null  $api
+     * @param  string|null        $pages
+     * @param  string|null        $health
+     * @param  string             $apiPrefix
+     * @param  callable|null      $then
+     * @return Closure
      */
     protected function buildRoutingCallback(
-        ?string   $web,
-        ?string   $api,
-        ?string   $pages,
-        ?string   $health,
-        string    $apiPrefix,
-        ?callable $then)
+        array|string|null $web,
+        array|string|null $api,
+        ?string           $pages,
+        ?string           $health,
+        string            $apiPrefix,
+        ?callable         $then
+    ): Closure
     {
         return function () use ($web, $api, $pages, $health, $apiPrefix, $then) {
             if (is_string($api) && realpath($api) !== false) {
