@@ -1,5 +1,24 @@
 {
     "There are some errors in your inputs.": "ހުށަހެޅި މަޢުލޫމާތުގައި މައްސަލަތެއް އެބަހުރި",
     "Error!": "އެރަރ!",
-    "Ok": "އޯކޭ"
+    "Ok": "އޯކޭ",
+    "An error occurred while performing the action.": "އެރަރ އެއް އަރައިފި.",
+    "Are you sure?": "ޔަޤީންތޯ؟",
+    "You will not be able to undo this delete operation!": "މި ޑިލީޓްކުރުމަށްފަހު އިޢާދައެއް ނުކުރެވޭނެ!",
+    "Yes, delete it!": "ޑިލީޓްކުރޭ!",
+    "Deleted!": "ޑިލީޓްވެއްޖެ!",
+    "The record has been deleted.": "ރިކޯޑު ޑިލީޓްކުރެވިއްޖެ.",
+    "An error occurred while deleting.": "ޑިލިޓްކުރުމުގައި މައްސަލައެއް ދިމާވެއްޖެ.",
+    "Just checking if you wanted to really do this.": "ކުރިއަށް ގެންދަން ޔަގީންތޯ؟",
+    "Yes, continue!": "ކުރިއަށްދޭ!",
+    "Save": "ސޭވް",
+    "An error occurred while saving.": "ސޭވްކުރުމުގައި އެރަރއެއް އަރައިފި.",
+    "File size cannot be greater than :size MB": ":size MB އަށް ވުރެ ފައިލް ބޮޑުވެގެން ނުވާނެ.",
+    "Only :accept files are allowed.": "ހަމައެކަނި ލެވޭނީ :accept ވައްތަރު ގެ ފައިލް.",
+    "Uploading...": "އަޕްލޯޑުކުރަނީ...",
+    "An error occurred while uploading the file.": "ފައިލް އަޕްލޯޑުކުރުމުގައި މައްސަލައެއް ދިމާވެއްޖެ.",
+    "Removing...": "ފުހެލަނީ...",
+    "An error occurred while removing the file.": "ފައިލު ފުހެލުމުގައި އެރަރއެއް އަރައިފި.",
+    "You will not be able to undo deleting this file!": "މިފައިލު ފުހެލައިފި ނަމަ އަލުން އިޢާދައެއް ނުކުރެވޭނެ!",
+    "Yes, remove it!": "ފުހެލާ!"
 }

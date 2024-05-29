@@ -175,6 +175,7 @@ return [
     'mobile'               => 'The :attribute must be a valid Maldivian mobile number.',
     'national_id'          => 'The :attribute must be a valid Maldivian National ID number.',
     'allowed_attributes'   => 'One or more of the :attribute is invalid.',
+    'wkt_geo_polygon'	   => 'The :attribute must be a valid GIS polygon string.',
 
     /*
     |--------------------------------------------------------------------------
