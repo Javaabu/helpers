@@ -48,6 +48,11 @@ abstract class AllowedMimeTypes
             'video/mp4',
         ],
 
+        'audio' => [
+            'audio/mp3',
+            'audio/wav',
+        ],
+
         'excel' => [
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
