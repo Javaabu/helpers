@@ -332,17 +332,29 @@ abstract class AllowedMimeTypes
     /**
      * Get the max size in kb for the given type
      */
-    public static function getMaxFileSize(string $type): int
+    public static function getMaxFileSize(string|array $types): int
     {
-        // first check if a setting is defined
-        $size = get_setting("max_{$type}_file_size");
+        $max_size = 0;
+        $types = Arr::wrap($types);
 
-        if (is_null($size)) {
-            $setting_key = self::getFileSizeSetting($type);
-            $size = get_setting($setting_key);
+        foreach ($types as $type) {
+            // first check if a setting is defined
+            $size = get_setting("max_{$type}_file_size");
+
+            if (empty($size)) {
+                $setting_key = self::getFileSizeSetting($type);
+                $size = get_setting($setting_key);
+            }
+
+            $size = (int) $size;
+
+            // check if max size
+            if ($size > $max_size) {
+                $max_size = $size;
+            }
         }
 
-        return $size;
+        return $max_size;
     }
 
     /**
@@ -352,7 +364,7 @@ abstract class AllowedMimeTypes
      * @param  bool    $as_array
      * @return string|array
      */
-    public static function getValidationRule(string $type, bool $as_array = false, ?int $max_size = null): array|string
+    public static function getValidationRule(string|array $type, bool $as_array = false, ?int $max_size = null): array|string
     {
         if (is_null($max_size)) {
             $max_size = self::getMaxFileSize($type);
@@ -405,7 +417,7 @@ abstract class AllowedMimeTypes
      * @param string|null $type
      * @return array
      */
-    public static function getAttachmentValidationRule(string $type = null): array
+    public static function getAttachmentValidationRule(string|array $type = null): array
     {
         $rules = [
             'nullable',

@@ -7,6 +7,26 @@ use Javaabu\Helpers\Tests\TestCase;
 
 class AllowedMimeTypesTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->app['config']->set('defaults.max_upload_file_size', 1024 * 10);
+        $this->app['config']->set('defaults.max_image_file_size', 1024 * 2);
+    }
+
+    /** @test */
+    public function it_can_get_the_max_file_size_based_on_multiple_file_types(): void
+    {
+        $this->assertEquals(1024 * 10, AllowedMimeTypes::getMaxFileSize(['document', 'image']));
+    }
+
+    /** @test */
+    public function it_can_get_the_max_file_size_based_on_file_type(): void
+    {
+        $this->assertEquals(1024 * 2, AllowedMimeTypes::getMaxFileSize('image'));
+        $this->assertEquals(1024 * 10, AllowedMimeTypes::getMaxFileSize('document'));
+    }
 
     /** @test */
     public function it_can_register_mimetypes(): void

@@ -93,9 +93,9 @@ Checks whether a given mimetype is allowed for the given file type(s).
 AllowedMimeTypes::isAllowedMimeType('audio/mp3', 'image'); // returns false
 ```
 
-### getMaxFileSize(string $type): int
+### getMaxFileSize(string|array $types): int
 
-Returns the max allowed file size in KB for the given file type. By default, the method will look if a `'max_<type>_file_size''` setting is available. Otherwise, it will fallback to the `'max_upload_file_size'` setting. Make sure the setting returns an int.
+Returns the max allowed file size in KB for the given file type. If an array of file types is given, it will return the maximum size allowed from all the given file types. By default, for each given file type, the method will look if a `'max_<type>_file_size''` setting is available. Otherwise, it will fallback to the `'max_upload_file_size'` setting.
 
 ```php
 AllowedMimeTypes::getMaxFileSize('image');
@@ -114,7 +114,7 @@ AllowedMimeTypes::registerFileSizeSettings('max_audio_visual_file_size', ['video
 
 In the above example, both `video` and `audio` files will use the `'max_audio_visual_file_size'` setting.
 
-### getValidationRule(string $type, bool $as_array = false, ?int $max_size = null): array|string
+### getValidationRule(string|array $type, bool $as_array = false, ?int $max_size = null): array|string
 
 Generates the validation rule for the given file type. Optionally pass a custom file size.
 
@@ -136,7 +136,7 @@ AllowedMimeTypes::getFileSizeSetting('icon');
 // returns 'max_image_file_size'
 ```
 
-### getAttachmentValidationRule(string $type = null): array
+### getAttachmentValidationRule(string|array $type = null): array
 
 Given a file type, generates a validation rule for valid media record from `spatie/laravel-medialibrary` media table.
 

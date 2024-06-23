@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Javaabu\Helpers\HelpersServiceProvider;
 use Javaabu\Helpers\Tests\TestSupport\Providers\TestServiceProvider;
+use Javaabu\Settings\SettingsServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -26,6 +27,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app): array
     {
         return [
+            SettingsServiceProvider::class,
             HelpersServiceProvider::class,
             TestServiceProvider::class
         ];
