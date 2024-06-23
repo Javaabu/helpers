@@ -156,8 +156,17 @@ use Javaabu\Helpers\AllowedMimeTypes;
 
 AllowedMimeTypes::registerMimeTypeExtensions([
     'image/png' => 'png',
-    'image/ico' => 'ico'
+    'image/x-ico' => 'ico'
 ]);
+```
+
+### getExtensions(array $mime_types): array
+
+Given an array of mimetypes, returns an array of corresponding unique file extensions.
+
+```php
+AllowedMimeTypes::getExtensions(['image/jpeg', 'image/x-icon', 'image/x-ico']);
+// returns ['jpeg', 'ico']
 ```
 
 

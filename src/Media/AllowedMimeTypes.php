@@ -425,4 +425,23 @@ abstract class AllowedMimeTypes
     {
         return self::$mime_type_extensions[$mime_type] ?? null;
     }
+
+    /**
+     * Get the extensions for the mime types
+     *
+     * @param $mime
+     * @return mixed|string|null
+     */
+    public static function getExtensions(array $mime_types): array
+    {
+        $extensions = [];
+
+        foreach ($mime_types as $mimetype) {
+            if ($extension = self::getExtension($mimetype)) {
+                $extensions[] = $extension;
+            }
+        }
+
+        return array_unique($extensions);
+    }
 }

@@ -59,6 +59,12 @@ class AllowedMimeTypesTest extends TestCase
     }
 
     /** @test */
+    public function it_can_get_file_extensions_from_mime_types(): void
+    {
+        $this->assertEquals(['jpeg', 'ico'], AllowedMimeTypes::getExtensions(['image/jpeg', 'image/x-icon', 'image/x-ico']));
+    }
+
+    /** @test */
     public function it_can_check_if_a_given_mime_type_as_a_string_is_an_allowed_mime_type(): void
     {
         $result = AllowedMimeTypes::isAllowedMimeType('image/jpeg', 'image');
