@@ -1,0 +1,11 @@
+{
+    "position": 1.3,
+    "label": "Modules",
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "slug": "/helpers/_categories/modules",
+        "description": "Features of different modules of the package"
+    }
+}
