@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
+use Javaabu\Settings\Testing\FakesSettings;
 use Laravel\Passport\ApiTokenCookieFactory;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
@@ -23,6 +24,8 @@ use Database\Seeders\PermissionsSeeder;
 
 abstract class TestCase extends BaseTestCase
 {
+    use FakesSettings;
+    
     /**
      * Setup the test environment.
      *
