@@ -6,6 +6,40 @@ use Javaabu\Helpers\Tests\TestCase;
 
 class HelpersTest extends TestCase
 {
+
+    /** @test */
+    public function it_can_convert_seconds_to_human_readable_time_with_zeros_omitted()
+    {
+        $this->assertEquals('1 year 2 months 14 days 30 minutes 15 seconds', seconds_to_human_readable(37931415, false, false));
+        $this->assertEquals('1 month 14 days 5 hours 15 seconds', seconds_to_human_readable(3819615, false, false));
+    }
+
+    /** @test */
+    public function it_can_convert_seconds_to_human_readable_time()
+    {
+        $this->assertEquals('2 years 2 months 14 days 5 hours 30 minutes 15 seconds', seconds_to_human_readable(69485415));
+        $this->assertEquals('1 year 2 months 14 days 5 hours 30 minutes 15 seconds', seconds_to_human_readable(37949415));
+        $this->assertEquals('1 year 2 months 14 days 0 hours 30 minutes 15 seconds', seconds_to_human_readable(37931415));
+        $this->assertEquals('1 month 14 days 5 hours 30 minutes 15 seconds', seconds_to_human_readable(3821415));
+        $this->assertEquals('1 month 14 days 5 hours 0 minutes 15 seconds', seconds_to_human_readable(3819615));
+        $this->assertEquals('1 day 5 hours 30 minutes 15 seconds', seconds_to_human_readable(106215));
+        $this->assertEquals('1 hour 30 minutes 15 seconds', seconds_to_human_readable(5415));
+        $this->assertEquals('1 minute 15 seconds', seconds_to_human_readable(75));
+        $this->assertEquals('1 second', seconds_to_human_readable(1));
+    }
+
+    /** @test */
+    public function it_can_convert_seconds_to_human_readable_time_in_abbreviated_format()
+    {
+        $this->assertEquals('2 years 2 months 14 days 5 hrs 30 mins 15 secs', seconds_to_human_readable(69485415, true));
+        $this->assertEquals('1 year 2 months 14 days 5 hrs 30 mins 15 secs', seconds_to_human_readable(37949415, true));
+        $this->assertEquals('1 month 14 days 5 hrs 30 mins 15 secs', seconds_to_human_readable(3821415, true));
+        $this->assertEquals('1 day 5 hrs 30 mins 15 secs', seconds_to_human_readable(106215, true));
+        $this->assertEquals('1 hr 30 mins 15 secs', seconds_to_human_readable(5415, true));
+        $this->assertEquals('1 min 15 secs', seconds_to_human_readable(75, true));
+        $this->assertEquals('1 sec', seconds_to_human_readable(1, true));
+    }
+
     /** @test */
     public function it_correctly_runs_to_array()
     {

@@ -20,5 +20,14 @@
     "Removing...": "ފުހެލަނީ...",
     "An error occurred while removing the file.": "ފައިލު ފުހެލުމުގައި އެރަރއެއް އަރައިފި.",
     "You will not be able to undo deleting this file!": "މިފައިލު ފުހެލައިފި ނަމަ އަލުން އިޢާދައެއް ނުކުރެވޭނެ!",
-    "Yes, remove it!": "ފުހެލާ!"
+    "Yes, remove it!": "ފުހެލާ!",
+    "1 day|:day days": "1 ދުވަސް|:day ދުވަސް",
+    "1 year|:year years": "1 އަހަރު|:year އަހަރު",
+    "1 month|:month months": "1 މަސް|:month މަސް",
+    "1 hr|:hour hrs": "1 ގަޑި|:hour ގަޑި",
+    "1 hour|:hour hours": "1 ގަޑިއިރު|:hour ގަޑިއިރު",
+    "1 min|:minute mins": "1 މިނެޓް|:minute މިނެޓް",
+    "1 minute|:minute minutes": "1 މިނެޓް|:minute މިނެޓް",
+    "1 sec|:second secs": "1 ސިކުންތު|:second ސިކުންތު",
+    "1 second|:second seconds": "1 ސިކުންތު|:second ސިކުންތު"
 }

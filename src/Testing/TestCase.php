@@ -25,7 +25,7 @@ use Database\Seeders\PermissionsSeeder;
 abstract class TestCase extends BaseTestCase
 {
     use FakesSettings;
-    
+
     /**
      * Setup the test environment.
      *

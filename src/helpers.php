@@ -815,3 +815,58 @@ if (! function_exists('is_admin_portal')) {
         return current_portal() == 'admin';
     }
 }
+
+if (! function_exists('seconds_to_human_readable')) {
+    /**
+     * Convert seconds to human readable
+     *
+     * @param  int  $seconds
+     * @return string
+     */
+    function seconds_to_human_readable(int $seconds, bool $abbreviated = false, bool $include_zero_units = true): string
+    {
+        $seconds_remaining = $seconds;
+        $output = [];
+
+        $years = floor($seconds_remaining / (365 * 24 * 60 * 60 ));
+        $seconds_remaining -= $years * 365 * 24 * 60 * 60;
+
+        if ($years > 0) {
+            $output[] = trans_choice(__('1 year|:year years', ['year' => $years]), $years);
+        }
+
+        $months = floor($seconds_remaining / (30 * 24 * 60 * 60));
+        $seconds_remaining -= $months * 30 * 24 * 60 * 60;
+
+        if (($include_zero_units && $seconds >= (30 * 24 * 60 * 60)) || $months > 0) {
+            $output[] = trans_choice(__('1 month|:month months', ['month' => $months]), $months);
+        }
+
+        $days = floor($seconds_remaining / (24 * 60 * 60));
+        $seconds_remaining -= $days * 24 * 60 * 60;
+
+        if (($include_zero_units && $seconds >= (24 * 60 * 60)) || $days > 0) {
+            $output[] = trans_choice(__('1 day|:day days', ['day' => $days]), $days);
+        }
+
+        $hours = floor($seconds_remaining / (60 * 60));
+        $seconds_remaining -= $hours * 60 * 60;
+
+        if (($include_zero_units && $seconds >= (60 * 60)) || $hours > 0) {
+            $output[] = $abbreviated ? trans_choice(__('1 hr|:hour hrs', ['hour' => $hours]), $hours) : trans_choice(__('1 hour|:hour hours', ['hour' => $hours]), $hours);
+        }
+
+        $minutes = floor($seconds_remaining / 60);
+        $seconds_remaining -= $minutes * 60;
+
+        if (($include_zero_units && $seconds >= 60) || $minutes > 0) {
+            $output[] = $abbreviated ? trans_choice(__('1 min|:minute mins', ['minute' => $minutes]), $minutes) : trans_choice(__('1 minute|:minute minutes', ['minute' => $minutes]), $minutes);
+        }
+
+        if ($include_zero_units || $seconds_remaining > 0) {
+            $output[] = $abbreviated ? trans_choice(__('1 sec|:second secs', ['second' => $seconds_remaining]), $seconds_remaining) : trans_choice(__('1 second|:second seconds', ['second' => $seconds_remaining]), $seconds_remaining);
+        }
+
+        return implode(' ', $output);
+    }
+}
