@@ -823,9 +823,9 @@ if (! function_exists('seconds_to_human_readable')) {
      * @param  int  $seconds
      * @return string
      */
-    function seconds_to_human_readable(int $seconds, bool $abbreviated = false, bool $include_zero_units = true): string
+    function seconds_to_human_readable($seconds, bool $abbreviated = false, bool $include_zero_units = true): string
     {
-        $seconds_remaining = $seconds;
+        $seconds_remaining = (int) $seconds;
         $output = [];
 
         $years = floor($seconds_remaining / (365 * 24 * 60 * 60 ));
