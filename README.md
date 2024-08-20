@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/javaabu/helpers.svg?style=flat-square)](https://packagist.org/packages/javaabu/helpers)
 [![Test Status](../../actions/workflows/run-tests.yml/badge.svg)](../../actions/workflows/run-tests.yml)
-[![Quality Score](https://img.shields.io/scrutinizer/g/javaabu/helpers.svg?style=flat-square)](https://scrutinizer-ci.com/g/javaabu/helpers)
+![Code Coverage Badge](./.github/coverage.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/javaabu/helpers.svg?style=flat-square)](https://packagist.org/packages/javaabu/helpers)
 
 Laravel helper functions that aide in development.
