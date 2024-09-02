@@ -10,12 +10,12 @@ trait NativeEnumsTrait
 {
     public function getLabel(): string
     {
-        return self::labels()[$this->value];
+        return __(slug_to_title($this->name));
     }
 
     public static function getLabelFromKey(string $key): string
     {
-        return self::labels()[$key] ?? '';
+        return (string) self::tryFrom($key)?->getLabel();
     }
 
     public static function getKeys(): array
@@ -36,7 +36,7 @@ trait NativeEnumsTrait
 
         /** @var static $case */
         foreach ($cases as $case) {
-            $labels[$case->value] = __(slug_to_title($case->name));
+            $labels[$case->value] = $case->getLabel();
         }
 
         return $labels;
