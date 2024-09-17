@@ -13,9 +13,11 @@ class HasCachedSoftDeleteCountTest extends TestCase
     /** @test */
     public function it_can_check_whether_a_model_has_soft_deletes()
     {
-        $post = Post::createOrRestore([
+        $post = new Post([
             'title' => 'test'
         ]);
+
+        $post->save();
 
         $this->assertFalse(Post::hasRecordsInTrash());
 
@@ -31,9 +33,11 @@ class HasCachedSoftDeleteCountTest extends TestCase
     /** @test */
     public function it_clears_the_cached_soft_deletes_when_a_model_is_deleted()
     {
-        $post = Post::createOrRestore([
+        $post = new Post([
             'title' => 'test'
         ]);
+
+        $post->save();
 
         $this->assertFalse(Post::hasRecordsInTrash());
         $this->assertTrue(cache()->has(Post::getSoftDeleteCacheKey()));
@@ -46,9 +50,11 @@ class HasCachedSoftDeleteCountTest extends TestCase
     /** @test */
     public function it_clears_the_cached_soft_deletes_when_a_model_is_restored()
     {
-        $post = Post::createOrRestore([
+        $post = new Post([
             'title' => 'test'
         ]);
+
+        $post->save();
 
         $post->delete();
 
