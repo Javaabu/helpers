@@ -4,6 +4,7 @@ namespace Javaabu\Helpers\Foundation\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -32,5 +33,20 @@ class Handler extends ExceptionHandler
         }
 
         return '/login';
+    }
+
+    protected function getHttpExceptionView(HttpExceptionInterface $e)
+    {
+        if (current_portal() == 'admin') {
+            return parent::getHttpExceptionView($e);
+        }
+
+        $view = 'web.errors.'.$e->getStatusCode();
+
+        if (view()->exists($view)) {
+            return $view;
+        }
+
+        return parent::getHttpExceptionView($e);
     }
 }
