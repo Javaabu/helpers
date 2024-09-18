@@ -579,10 +579,33 @@ if (! function_exists('current_portal')) {
     {
         $host = RequestFacade::getHost();
 
-        switch ($host) {
-            case config('app.admin_domain'):
+        // get the main url
+        $parse = parse_url(config('app.url'));
+        $primary_domain = str_ireplace('www.', '', $parse['host']);
+
+        // get the admin domain
+        $admin_domain = config('app.admin_domain');
+
+        if ($primary_domain != $admin_domain) {
+            if ($host == $admin_domain) {
                 return 'admin';
-                break;
+            }
+        } elseif ($admin_prefix = config('app.admin_prefix')) {
+            // Get the current URL
+            $url = RequestFacade::url();
+
+            // Parse the URL
+            $parsed_url = parse_url($url);
+
+            // Get the path from the parsed URL
+            $path = $parsed_url['path'] ?? '';
+
+            // Get the first part of the path
+            $first_part = trim(explode('/', $path)[1] ?? '', '/');
+
+            if ($first_part == $admin_prefix) {
+                return 'admin';
+            }
         }
 
         return 'public';

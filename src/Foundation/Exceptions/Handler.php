@@ -47,6 +47,12 @@ class Handler extends ExceptionHandler
             return $view;
         }
 
+        $view = substr($view, 0, -2).'xx';
+
+        if (view()->exists($view)) {
+            return $view;
+        }
+
         return parent::getHttpExceptionView($e);
     }
 }
