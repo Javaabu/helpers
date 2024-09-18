@@ -17,15 +17,7 @@ use Laravel\Folio\Folio;
 class ApplicationBuilder extends BaseApplicationBuilder
 {
     /**
-     * Create the routing callback for the application.
-     *
-     * @param  array|string|null  $web
-     * @param  array|string|null  $api
-     * @param  string|null        $pages
-     * @param  string|null        $health
-     * @param  string             $apiPrefix
-     * @param  callable|null      $then
-     * @return Closure
+     * Add as('api.') to api routes
      */
     protected function buildRoutingCallback(
         array|string|null $web,
@@ -37,20 +29,40 @@ class ApplicationBuilder extends BaseApplicationBuilder
     ): Closure
     {
         return function () use ($web, $api, $pages, $health, $apiPrefix, $then) {
-            if (is_string($api) && realpath($api) !== false) {
-                Route::middleware('api')->as('api.')->prefix($apiPrefix)->group($api);
+            if (is_string($api) || is_array($api)) {
+                if (is_array($api)) {
+                    foreach ($api as $apiRoute) {
+                        if (realpath($apiRoute) !== false) {
+                            Route::middleware('api')->as('api.')->prefix($apiPrefix)->group($apiRoute);
+                        }
+                    }
+                } else {
+                    Route::middleware('api')->as('api.')->prefix($apiPrefix)->group($api);
+                }
             }
 
             if (is_string($health)) {
-                Route::middleware('web')->get($health, function () {
+                Route::get($health, function () {
                     Event::dispatch(new DiagnosingHealth);
 
-                    return View::file(__DIR__ . '/../resources/health-up.blade.php');
+                    return View::file(__DIR__.'/../../resources/health-up.blade.php');
                 });
             }
 
-            if (is_string($web) && realpath($web) !== false) {
-                Route::middleware('web')->group($web);
+            if (is_string($web) || is_array($web)) {
+                if (is_array($web)) {
+                    foreach ($web as $webRoute) {
+                        if (realpath($webRoute) !== false) {
+                            Route::middleware('web')->group($webRoute);
+                        }
+                    }
+                } else {
+                    Route::middleware('web')->group($web);
+                }
+            }
+
+            foreach ($this->additionalRoutingCallbacks as $callback) {
+                $callback();
             }
 
             if (is_string($pages) &&
@@ -65,6 +77,9 @@ class ApplicationBuilder extends BaseApplicationBuilder
         };
     }
 
+    /**
+     * Removing redirect guests to route('login')
+     */
     public function withMiddleware(?callable $callback = null)
     {
         $this->app->afterResolving(HttpKernel::class, function ($kernel) use ($callback) {
@@ -88,6 +103,10 @@ class ApplicationBuilder extends BaseApplicationBuilder
         return $this;
     }
 
+
+    /**
+     * Using our custom Exception handler
+     */
     public function withExceptions(?callable $using = null)
     {
         $this->app->singleton(
