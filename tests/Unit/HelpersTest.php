@@ -93,6 +93,11 @@ class HelpersTest extends TestCase
     public function it_correctly_runs_number_format_exact()
     {
         $this->assertEquals('1,120.5', number_format_exact(1120.5));
+        $this->assertEquals('1,120.50', number_format_exact('1120.50'));
+        $this->assertEquals('1,120.500', number_format_exact('1120.500'));
+        $this->assertEquals('1,120.50', number_format_exact('1120.500', max_decimals: 2));
+        $this->assertEquals('1,120.5', number_format_exact('1120.500', max_decimals: 0));
+        $this->assertEquals('1,120', number_format_exact('1120.000', max_decimals: 0));
     }
 
     /** @test */

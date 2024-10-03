@@ -155,11 +155,27 @@ if (! function_exists('number_format_exact')) {
      * @param  string  $decimal
      * @return string
      */
-    function number_format_exact($number, string $decimal = '.'): string
+    function number_format_exact($number, string $decimal = '.', ?int $max_decimals = null): string
     {
         $broken_number = explode($decimal, (string) $number);
         $string = number_format($broken_number[0]);
-        $string .= isset($broken_number[1]) ? $decimal.$broken_number[1] : '';
+        $decimal_part = $broken_number[1] ?? '';
+
+        // remove trailing 0s
+        if (! is_null($max_decimals)) {
+            $num_decimals = strlen($decimal_part);
+            $zeros_to_strip = $num_decimals - $max_decimals;
+
+            for ($i = 0; $i < $zeros_to_strip; $i++) {
+                if (substr($decimal_part, -1) === '0') {
+                    $decimal_part = substr($decimal_part, 0, -1);
+                } else {
+                    break; // Stop if the last character is not a zero
+                }
+            }
+        }
+
+        $string .= $decimal_part ? $decimal.$decimal_part : '';
 
         return $string;
     }
