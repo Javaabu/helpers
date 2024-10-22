@@ -12,11 +12,11 @@ use Illuminate\Support\Str;
 trait IsAdminModel
 {
     /**
-     * Get admin user attribute
+     * Generates an admin link using the given attribute
      *
      * @return string
      */
-    public function getAdminLinkAttribute(): string
+    public function generateAdminLink(string $attribute = 'admin_link_name'): string
     {
         if ($this->canViewAdminLink()) {
             $admin_url = $this->admin_url;
@@ -27,7 +27,17 @@ trait IsAdminModel
         $before = $admin_url ? '<a href="' . e($admin_url) . '">' : '';
         $after = $admin_url ? '</a>' : '';
 
-        return $before . e($this->admin_link_name) . $after;
+        return $before . e($this->{$attribute}) . $after;
+    }
+
+    /**
+     * Get admin user attribute
+     *
+     * @return string
+     */
+    public function getAdminLinkAttribute(): string
+    {
+        return $this->generateAdminLink();
     }
 
     /**

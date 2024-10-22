@@ -31,6 +31,13 @@ interface AdminModel
     public function getAdminLinkNameAttribute(): string;
 
     /**
+     * Generates an admin link using the given attribute
+     *
+     * @return string
+     */
+    public function generateAdminLink(string $attribute = 'admin_link_name'): string;
+
+    /**
      * Get can view admin link
      *
      * @return boolean
