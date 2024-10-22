@@ -161,6 +161,16 @@ trait Publishable
     }
 
     /**
+     * Set the post to pending
+     *
+     * @param bool $save
+     */
+    public function markAsPending()
+    {
+        $this->status = $this->getPendingKey();
+    }
+
+    /**
      * Reject the post
      * @return void
      */
