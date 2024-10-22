@@ -123,7 +123,7 @@ trait IsAdminModel
             return $query;
         }
 
-        return $query->where($this->getKeyName(), $search);
+        return $query->where($this->getTable() . '.' . $this->getKeyName(), $search);
     }
 
     /**
