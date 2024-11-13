@@ -909,3 +909,24 @@ if (! function_exists('seconds_to_human_readable')) {
         return implode(' ', $output);
     }
 }
+
+if (! function_exists('relative_date')) {
+    /**
+     * Convert kb to human readable file size
+     *
+     * @param Carbon $date
+     * @param null $locale
+     * @return string
+     */
+    function relative_date(Carbon $date, $locale = null) {
+        if (! $locale) {
+            $locale = app()->getLocale();
+        }
+
+        $diff = $date->locale($locale)->longAbsoluteDiffForHumans();
+
+        return $date > now() ?
+            __(':time from now', ['time' => $diff], $locale) :
+            __(':time ago', ['time' => $diff], $locale);
+    }
+}

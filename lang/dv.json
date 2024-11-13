@@ -78,5 +78,7 @@
     "Your inputs have been saved.": "ޖެއްސެވު މަޢުލޫމާތުތައް ވަނީ ސޭވް ކުރެވިފައި",
     "Please verify <strong>:email</strong> to update email address to it.": "<strong>:email</strong> އަށް އީމެއިލް ބަދަލުކުރުމަށްޓަކއި އެ އީމެއިލް ވެރިފައިކުރައްވާ.",
     "You must verify <strong>:email</strong> to activate this account.": "މި އެކައުންޓު އެކްޓިވޭޓުކުރެއްވުމަށްޓަކައި <strong>:email</strong> އީމެއިލް ވެރިފައިކުތައްވާ.",
-    "Resend verification email?": "އަދި އެއްފަހަރު ވެރިފިކޭޝަން އީމެއިލް ފޮނުވާ!"
+    "Resend verification email?": "އަދި އެއްފަހަރު ވެރިފިކޭޝަން އީމެއިލް ފޮނުވާ!",
+    ":time ago": ":time ކުރިން",
+    ":time from now": "މިހާރުން ފެށިގެން އޮތް ވަޤުތު :time"
 }
