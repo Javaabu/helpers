@@ -6,6 +6,11 @@ use Javaabu\Helpers\Tests\TestCase;
 
 class HelpersTest extends TestCase
 {
+    protected function defineEnvironment($app)
+    {
+        // added to remove the default /storage route for testing top level slugs
+        config()->set('filesystems.disks.local.serve', false);
+    }
 
     /** @test */
     public function it_can_convert_seconds_to_human_readable_time_with_zeros_omitted()
