@@ -2,7 +2,6 @@
 
 namespace Javaabu\Helpers\Enums;
 
-interface IsStatusEnum extends IsEnum
+interface IsStatusEnum extends IsEnum, HasColor
 {
-    public function getColor(): string;
 }
