@@ -3,6 +3,7 @@
 namespace Javaabu\Helpers\Tests\Feature;
 
 use Javaabu\Helpers\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class HelpersServiceProviderTest extends TestCase
 {
@@ -20,7 +21,7 @@ class HelpersServiceProviderTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function it_loads_local_helpers()
     {
         $this->withoutExceptionHandling();

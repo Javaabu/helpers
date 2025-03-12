@@ -3,6 +3,7 @@
 namespace Javaabu\Helpers\Tests\Feature;
 
 use Javaabu\Helpers\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ValidatorsTest extends TestCase
 {
@@ -38,7 +39,7 @@ class ValidatorsTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function it_can_validate_a_slug()
     {
         $validator = validator(
@@ -53,7 +54,7 @@ class ValidatorsTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_can_load_localized_validation()
     {
         $this->app->setLocale('dv');

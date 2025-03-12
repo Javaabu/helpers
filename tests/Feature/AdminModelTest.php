@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Helpers\AdminModel\AdminModel;
 use Javaabu\Helpers\AdminModel\IsAdminModel;
 use Javaabu\Helpers\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CategoryWithDateCast extends Model implements AdminModel
 {
@@ -121,7 +122,7 @@ class AdminModelTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_can_get_list_of_date_fields(): void
     {
         $this->assertEquals([
@@ -131,7 +132,7 @@ class AdminModelTest extends TestCase
         ], CategoryWithDateCast::getDateFieldsList());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_determine_if_an_attribute_is_an_allowed_date_field(): void
     {
         $this->assertTrue(CategoryWithDateCast::isAllowedDateField('published_at'));
@@ -140,7 +141,7 @@ class AdminModelTest extends TestCase
         $this->assertFalse(CategoryWithDateCast::isAllowedDateField('name'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_determine_date_fields_from_date_casts(): void
     {
         $category = new CategoryWithDateCast();
@@ -148,7 +149,7 @@ class AdminModelTest extends TestCase
         $this->assertEquals(['published_at', 'created_at', 'updated_at'], $category->getDateAttributes());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_determine_date_fields_from_datetime_casts(): void
     {
         $category = new CategoryWithDateTimeCast();
@@ -156,7 +157,7 @@ class AdminModelTest extends TestCase
         $this->assertEquals(['published_at', 'created_at', 'updated_at'], $category->getDateAttributes());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_filter_models_by_date_range(): void
     {
         $category = new CategoryWithDateCast([
@@ -171,7 +172,7 @@ class AdminModelTest extends TestCase
         $this->assertEquals($category->id, $found->id);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_models_using_a_partial_match(): void
     {
         $category = new CategoryWithSearchable(['name' => 'Apple', 'slug' => 'some-slug']);
@@ -182,7 +183,7 @@ class AdminModelTest extends TestCase
         $this->assertEquals($category->id, $found->id);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_models_using_a_single_searchable(): void
     {
         $category = new CategoryWithSearchable(['name' => 'Apple', 'slug' => 'some-slug']);
@@ -194,7 +195,7 @@ class AdminModelTest extends TestCase
         $this->assertNull(CategoryWithSearchable::search('some-slug')->first());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_models_using_a_string_searchable(): void
     {
         $category = new CategoryWithStringSearchable(['name' => 'Apple', 'slug' => 'some-slug']);
@@ -206,7 +207,7 @@ class AdminModelTest extends TestCase
         $this->assertNull(CategoryWithStringSearchable::search('some-slug')->first());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_models_using_multiple_searchables(): void
     {
         $category = new CategoryWithMultipleSearchable(['name' => 'Apple', 'slug' => 'some-slug']);
@@ -221,7 +222,7 @@ class AdminModelTest extends TestCase
         $this->assertEquals($category->id, $found->id);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_models_without_searchable(): void
     {
         $category = new CategoryWithoutSearchable(['name' => 'Apple', 'slug' => 'some-slug']);
