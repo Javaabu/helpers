@@ -266,6 +266,15 @@ abstract class AllowedMimeTypes
         'text/x-scriptzsh'                                                          => 'zsh',
     ];
 
+    /**
+     * Get all allowed types
+     *
+     * @return array
+     */
+    public static function getAllowedTypes()
+    {
+        return array_keys(self::$allowed_mime_types);
+    }
 
     public static function registerMimeTypes(string $key, array $mime_types): void
     {

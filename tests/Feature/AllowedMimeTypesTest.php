@@ -102,4 +102,18 @@ class AllowedMimeTypesTest extends TestCase
         $this->assertTrue($result);
     }
 
+    #[Test]
+    public function it_can_get_all_allowed_types()
+    {
+        $result = AllowedMimeTypes::getAllowedTypes();
+        $this->assertEquals([
+            'image',
+            'icon',
+            'document',
+            'video',
+            'audio',
+            'excel',
+            'paper',
+        ], $result);
+    }
 }
