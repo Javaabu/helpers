@@ -6,10 +6,11 @@ use Javaabu\Helpers\Enums\HasColor;
 use Javaabu\Helpers\Enums\IsStatusEnum;
 use Javaabu\Helpers\Enums\PublishStatuses;
 use Javaabu\Helpers\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class EnumsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_can_generate_enum_label()
     {
         $this->assertEquals('Pending', PublishStatuses::PENDING->getLabel());
@@ -21,7 +22,7 @@ class EnumsTest extends TestCase
         ], PublishStatuses::getLabels());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_see_that_an_enum_is_a_status_enum()
     {
         $this->assertTrue(in_array(IsStatusEnum::class, class_implements(PublishStatuses::class)));
@@ -31,7 +32,7 @@ class EnumsTest extends TestCase
         $this->assertTrue(method_exists(PublishStatuses::class, 'getColor'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_enum_color()
     {
         // Check if enum implements HasColor

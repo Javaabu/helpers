@@ -3,6 +3,7 @@
 namespace Javaabu\Helpers\Tests\Unit;
 
 use Javaabu\Helpers\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class HelpersTest extends TestCase
 {
@@ -12,14 +13,14 @@ class HelpersTest extends TestCase
         config()->set('filesystems.disks.local.serve', false);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_convert_seconds_to_human_readable_time_with_zeros_omitted()
     {
         $this->assertEquals('1 year 2 months 14 days 30 minutes 15 seconds', seconds_to_human_readable(37931415, false, false));
         $this->assertEquals('1 month 14 days 5 hours 15 seconds', seconds_to_human_readable(3819615, false, false));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_convert_seconds_to_human_readable_time()
     {
         $this->assertEquals('2 years 2 months 14 days 5 hours 30 minutes 15 seconds', seconds_to_human_readable(69485415));
@@ -33,7 +34,7 @@ class HelpersTest extends TestCase
         $this->assertEquals('1 second', seconds_to_human_readable(1));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_convert_seconds_to_human_readable_time_in_abbreviated_format()
     {
         $this->assertEquals('2 years 2 months 14 days 5 hrs 30 mins 15 secs', seconds_to_human_readable(69485415, true));
@@ -45,14 +46,14 @@ class HelpersTest extends TestCase
         $this->assertEquals('1 sec', seconds_to_human_readable(1, true));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_to_array()
     {
         $this->assertEquals(['mango', 'apple'], to_array('mango,apple'));
         $this->assertEquals(['mango', 'apple'], to_array(['mango', 'apple']));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_safe_in_array()
     {
         $this->assertFalse(safe_in_array('mango', 'mango,apple'));
@@ -62,20 +63,20 @@ class HelpersTest extends TestCase
         $this->assertTrue(safe_in_array('mango', ['mango', 'apple']));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_strip_protocol()
     {
         $this->assertEquals('google.com', strip_protocol('https://google.com'));
         $this->assertEquals('google.com', strip_protocol('http://google.com'));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_url_path()
     {
         $this->assertEquals('about', url_path('https://google.com/about?foo=bar&buz=true'));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_top_level_slugs()
     {
         $this->assertEquals([], top_level_slugs());
@@ -85,7 +86,7 @@ class HelpersTest extends TestCase
         $this->assertEquals(['welcome'], top_level_slugs());
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_is_color()
     {
         $this->assertFalse(is_color('red'));
@@ -94,7 +95,7 @@ class HelpersTest extends TestCase
         $this->assertFalse(is_color('#0000001'));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_number_format_exact()
     {
         $this->assertEquals('1,120.5', number_format_exact(1120.5));
@@ -105,21 +106,21 @@ class HelpersTest extends TestCase
         $this->assertEquals('1,120', number_format_exact('1120.000', max_decimals: 0));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_remove_prefix()
     {
         $this->assertEquals('google.com', remove_prefix('http://', 'http://google.com'));
         $this->assertEquals('google.com', remove_prefix('http://', 'google.com'));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_remove_suffix()
     {
         $this->assertEquals('google.com', remove_suffix('/about', 'google.com/about'));
         $this->assertEquals('google.com', remove_suffix('/about', 'google.com'));
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_runs_slug_to_title()
     {
         $this->assertEquals('Apple', slug_to_title('apple'));
@@ -127,7 +128,7 @@ class HelpersTest extends TestCase
         $this->assertEquals('Apple Magic', slug_to_title('apple Magic', ' '));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_convert_a_full_url_to_a_relative_url()
     {
         $this->assertEquals('google.com', relative_url('https://google.com'), 'Cannot remove protocol from external url');
@@ -140,7 +141,7 @@ class HelpersTest extends TestCase
         $this->assertEquals('', relative_url(''), 'Cannot handle empty string');
     }
 
-    /** @test */
+    #[Test]
     public function it_can_add_query_args_to_a_url()
     {
         $this->withoutExceptionHandling();

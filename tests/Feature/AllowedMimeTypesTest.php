@@ -4,6 +4,7 @@ namespace Javaabu\Helpers\Tests\Feature;
 
 use Javaabu\Helpers\Media\AllowedMimeTypes;
 use Javaabu\Helpers\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AllowedMimeTypesTest extends TestCase
 {
@@ -15,20 +16,20 @@ class AllowedMimeTypesTest extends TestCase
         $this->app['config']->set('defaults.max_image_file_size', 1024 * 2);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_the_max_file_size_based_on_multiple_file_types(): void
     {
         $this->assertEquals(1024 * 10, AllowedMimeTypes::getMaxFileSize(['document', 'image']));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_the_max_file_size_based_on_file_type(): void
     {
         $this->assertEquals(1024 * 2, AllowedMimeTypes::getMaxFileSize('image'));
         $this->assertEquals(1024 * 10, AllowedMimeTypes::getMaxFileSize('document'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_register_mimetypes(): void
     {
         // not registered
@@ -40,7 +41,7 @@ class AllowedMimeTypesTest extends TestCase
         $this->assertEquals(['text/plain'], AllowedMimeTypes::getAllowedMimeTypes('paper'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_register_file_size_settings(): void
     {
         // not registered
@@ -52,7 +53,7 @@ class AllowedMimeTypesTest extends TestCase
         $this->assertEquals('max_document_file_size', AllowedMimeTypes::getFileSizeSetting('paper'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_register_mime_type_extensions(): void
     {
         // not registered
@@ -64,7 +65,7 @@ class AllowedMimeTypesTest extends TestCase
         $this->assertEquals('pp', AllowedMimeTypes::getExtension('text/paper'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_file_size_setting_from_type(): void
     {
         $this->assertEquals('max_image_file_size', AllowedMimeTypes::getFileSizeSetting('icon'));
@@ -72,26 +73,26 @@ class AllowedMimeTypesTest extends TestCase
         $this->assertEquals('max_upload_file_size', AllowedMimeTypes::getFileSizeSetting('document'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_file_extension_from_mime_type(): void
     {
         $this->assertEquals('jpeg', AllowedMimeTypes::getExtension('image/jpeg'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_file_extensions_from_mime_types(): void
     {
         $this->assertEquals(['jpeg', 'ico'], AllowedMimeTypes::getExtensions(['image/jpeg', 'image/x-icon', 'image/x-ico']));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_check_if_a_given_mime_type_as_a_string_is_an_allowed_mime_type(): void
     {
         $result = AllowedMimeTypes::isAllowedMimeType('image/jpeg', 'image');
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_check_if_a_given_mime_type_as_an_array_is_an_allowed_mime_type()
     {
         $result = AllowedMimeTypes::isAllowedMimeType('image/jpeg', ['image', 'video']);
@@ -101,4 +102,18 @@ class AllowedMimeTypesTest extends TestCase
         $this->assertTrue($result);
     }
 
+    #[Test]
+    public function it_can_get_all_allowed_types()
+    {
+        $result = AllowedMimeTypes::getAllowedTypes();
+        $this->assertEquals([
+            'image',
+            'icon',
+            'document',
+            'video',
+            'audio',
+            'excel',
+            'paper',
+        ], $result);
+    }
 }

@@ -5,12 +5,13 @@ namespace Javaabu\Helpers\Tests\Unit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Helpers\Tests\TestCase;
 use Javaabu\Helpers\Tests\TestSupport\Models\Post;
+use PHPUnit\Framework\Attributes\Test;
 
 class HasCachedSoftDeleteCountTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_can_check_whether_a_model_has_soft_deletes()
     {
         $post = new Post([
@@ -30,7 +31,7 @@ class HasCachedSoftDeleteCountTest extends TestCase
         $this->assertFalse(Post::hasRecordsInTrash());
     }
 
-    /** @test */
+    #[Test]
     public function it_clears_the_cached_soft_deletes_when_a_model_is_deleted()
     {
         $post = new Post([
@@ -47,7 +48,7 @@ class HasCachedSoftDeleteCountTest extends TestCase
         $this->assertFalse(cache()->has(Post::getSoftDeleteCacheKey()));
     }
 
-    /** @test */
+    #[Test]
     public function it_clears_the_cached_soft_deletes_when_a_model_is_restored()
     {
         $post = new Post([
