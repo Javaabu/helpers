@@ -297,7 +297,7 @@ abstract class AllowedMimeTypes
      * @param  string|array  $type
      * @return array
      */
-    public static function getAllowedMimeTypes(string|array $type): array
+    public static function getAllowedMimeTypes(string|array $type = ''): array
     {
         if (is_array($type)) {
             $mime_types = [];
@@ -321,7 +321,7 @@ abstract class AllowedMimeTypes
      * @param  string  $separator
      * @return string
      */
-    public static function getAllowedMimeTypesString(string|array $type, string $separator = ','): string
+    public static function getAllowedMimeTypesString(string|array $type = '', string $separator = ','): string
     {
         return implode($separator, self::getAllowedMimeTypes($type));
     }
@@ -333,7 +333,7 @@ abstract class AllowedMimeTypes
      * @param  string  $type
      * @return boolean
      */
-    public static function isAllowedMimeType(string $mime_type, array|string $type): bool
+    public static function isAllowedMimeType(string $mime_type, array|string $type = ''): bool
     {
         return in_array($mime_type, self::getAllowedMimeTypes($type));
     }
@@ -341,9 +341,14 @@ abstract class AllowedMimeTypes
     /**
      * Get the max size in kb for the given type
      */
-    public static function getMaxFileSize(string|array $types): int
+    public static function getMaxFileSize(string|array $types = ''): int
     {
         $max_size = 0;
+
+        if (! $types) {
+            $types = self::getAllowedTypes();
+        }
+
         $types = Arr::wrap($types);
 
         foreach ($types as $type) {
@@ -373,7 +378,7 @@ abstract class AllowedMimeTypes
      * @param  bool    $as_array
      * @return string|array
      */
-    public static function getValidationRule(string|array $type, bool $as_array = false, ?int $max_size = null): array|string
+    public static function getValidationRule(string|array $type = '', bool $as_array = false, ?int $max_size = null): array|string
     {
         if (is_null($max_size)) {
             $max_size = self::getMaxFileSize($type);
@@ -426,7 +431,7 @@ abstract class AllowedMimeTypes
      * @param string|null $type
      * @return array
      */
-    public static function getAttachmentValidationRule(string|array $type = null): array
+    public static function getAttachmentValidationRule(string|array|null $type = null): array
     {
         $rules = [
             'nullable',
