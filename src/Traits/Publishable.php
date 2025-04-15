@@ -6,6 +6,7 @@
 namespace Javaabu\Helpers\Traits;
 
 use App\Models\User;
+use Illuminate\Contracts\Auth\Access\Authorizable;
 
 trait Publishable
 {
@@ -127,6 +128,11 @@ trait Publishable
         return $status_class::REJECTED;
     }
 
+    public function canPublish(Authorizable $user): bool
+    {
+        return $user->can('publish', static::class);
+    }
+
     /**
      * Update the status
      *
@@ -136,12 +142,14 @@ trait Publishable
      */
     public function updateStatus($status, $publish = false)
     {
+        $user = auth()->user();
+
         //first check if requesting for publishing
         if ($publish || $status == $this->getPublishedKey()) {
             $this->publish();
         } elseif ($status == $this->getRejectedKey()) {
             $this->reject();
-        } elseif ($status && auth()->check() && auth()->user()->can('publish', static::class)) {
+        } elseif ($status && $user && $this->canPublish($user)) {
             $this->status = $status;
         } else {
             $this->draft();
