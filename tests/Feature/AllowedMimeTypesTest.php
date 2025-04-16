@@ -14,6 +14,9 @@ class AllowedMimeTypesTest extends TestCase
 
         $this->app['config']->set('defaults.max_upload_file_size', 1024 * 10);
         $this->app['config']->set('defaults.max_image_file_size', 1024 * 2);
+
+        AllowedMimeTypes::setDefaultIconPack('fontawesome');
+        AllowedMimeTypes::registerIconPrefix('fontawesome', 'fa-regular fa-');
     }
 
     #[Test]
@@ -164,10 +167,16 @@ class AllowedMimeTypesTest extends TestCase
         $this->assertEquals([
             'image',
             'icon',
-            'document',
             'video',
             'audio',
             'excel',
+            'word',
+            'powerpoint',
+            'pdf',
+            'text',
+            'json',
+            'document',
+            'zip',
             'paper',
         ], $result);
     }
