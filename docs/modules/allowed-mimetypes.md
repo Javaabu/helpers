@@ -46,9 +46,9 @@ class ProductsRequest extends FormRequest
 
 The `AllowedMimeTypes` class has the following available static methods.
 
-### getAllowedMimeTypes(string|array $type): array
+### getAllowedMimeTypes(string|array $type = ''): array
 
-Given a file type, or an array of types, returns an array of allowed mime types.
+Given a file type, or an array of types, returns an array of allowed mime types. If no type is provided, returns all allowed mimetypes.
 
 ```php
 $mimetypes = AllowedMimeTypes::getAllowedMimeTypes('image');
@@ -74,9 +74,79 @@ use Javaabu\Helpers\AllowedMimeTypes;
 AllowedMimeTypes::registerMimeTypes('word', ['application/vnd.ms-word', 'text/plain']);
 ```
 
-### getAllowedMimeTypesString(string|array $type, string $separator = ','): string
+### getDefaultIconPack(): string
 
-Given a file type, or an array of types, returns a string of allowed mime types separated by the given delimiter.
+Returns the default icon pack. 
+
+```php
+$icon_pack = AllowedMimeTypes::getDefaultIconPack();
+// fontawesome
+```
+
+To change the default icon pack, you can call the `AllowedMimeTypes::setDefaultIconPack` method in the `boot` method of your`App\Providers\AppServiceProvider` class.
+Out of the box, the package supports `fontawesome` and `material` icon packs.
+
+```php
+use Javaabu\Helpers\AllowedMimeTypes;
+
+AllowedMimeTypes::setDefaultIconPack('material');
+```
+
+### getIconPrefix(string $icon_pack = ''): string
+
+Returns the icon prefix for the given icon pack. If no icon pack is given, returns the prefix for the default icon pack.
+
+```php
+$prefix = AllowedMimeTypes::getIconPrefix('material');
+// zmdi zmdi-
+```
+
+To change the icon prefix for a given icon pack, you can call the `AllowedMimeTypes::registerIconPrefix` method in the `boot` method of your`App\Providers\AppServiceProvider` class.
+
+```php
+use Javaabu\Helpers\AllowedMimeTypes;
+
+AllowedMimeTypes::registerIconPrefix('fontawesome', 'fa-light fa');
+```
+
+### getIcon(string $mime_type, string $icon_pack = '', bool $with_prefix = false): string
+
+Returns the icon for the given mimetype. If no icon pack is given, uses the default icon pack. If an icon is not defined directly for the given mime type, then it will fallback to the file type of the mime type. If no icon is defined for the file type as well, then will fallback to the `default` icon of the icon pack.
+
+```php
+AllowedMimeTypes::getIcon('word'); // file-word
+AllowedMimeTypes::getIcon('application/msword'); // file-word
+AllowedMimeTypes::getIcon('application/msword', 'material'); // file-text
+AllowedMimeTypes::getIcon('application/msword', with_prefix: true)); // fa-regular fa-file-word
+AllowedMimeTypes::getIcon('missing-mimetype')); // file
+```
+
+To register your own icons for a given icon pack, you can call the `AllowedMimeTypes::registerIcons` method in the `boot` method of your`App\Providers\AppServiceProvider` class. This will merge any existing with your new icons. If you want to fully override the icons for a given icon pack, then you can set the `merge` option to false. 
+
+```php
+use Javaabu\Helpers\AllowedMimeTypes;
+
+// add to icons
+AllowedMimeTypes::registerIcons('fontawesome', [
+    'text/javascript' => 'file-code'
+]);
+
+// fully override icons
+AllowedMimeTypes::registerIcons('material', [
+    'default' => 'file',
+    'text/javascript' => 'code'
+]);
+
+// register your own icon pack
+AllowedMimeTypes::registerIcons('feather', [
+    'default' => 'file',
+    'text/javascript' => 'code'
+]);
+```
+
+### getAllowedMimeTypesString(string|array $type = '', string $separator = ','): string
+
+Given a file type, or an array of types, returns a string of allowed mime types separated by the given delimiter. If no type is given, returns all mimetypes separated by given delimiter.
 
 ```php
 $mimetypes = AllowedMimeTypes::getAllowedMimeTypesString('image');
@@ -85,17 +155,17 @@ $mimetypes = AllowedMimeTypes::getAllowedMimeTypesString('image');
 */
 ```
 
-### isAllowedMimeType(string $mime_type, array|string $type): bool
+### isAllowedMimeType(string $mime_type, array|string $type = ''): bool
 
-Checks whether a given mimetype is allowed for the given file type(s).
+Checks whether a given mimetype is allowed for the given file type(s). If no type is given, checks if the given mimetype is allowed.
 
 ```php
 AllowedMimeTypes::isAllowedMimeType('audio/mp3', 'image'); // returns false
 ```
 
-### getMaxFileSize(string|array $types): int
+### getMaxFileSize(string|array $types = ''): int
 
-Returns the max allowed file size in KB for the given file type. If an array of file types is given, it will return the maximum size allowed from all the given file types. By default, for each given file type, the method will look if a `'max_<type>_file_size''` setting is available. Otherwise, it will fallback to the `'max_upload_file_size'` setting.
+Returns the max allowed file size in KB for the given file type. If an array of file types is given or no type is given, it will return the maximum size allowed from all the file types. By default, for each given file type, the method will look if a `'max_<type>_file_size''` setting is available. Otherwise, it will fallback to the `'max_upload_file_size'` setting.
 
 ```php
 AllowedMimeTypes::getMaxFileSize('image');
@@ -114,9 +184,9 @@ AllowedMimeTypes::registerFileSizeSettings('max_audio_visual_file_size', ['video
 
 In the above example, both `video` and `audio` files will use the `'max_audio_visual_file_size'` setting.
 
-### getValidationRule(string|array $type, bool $as_array = false, ?int $max_size = null): array|string
+### getValidationRule(string|array $type = '', bool $as_array = false, ?int $max_size = null): array|string
 
-Generates the validation rule for the given file type. Optionally pass a custom file size.
+Generates the validation rule for the given file type. If no type is given, will allow all allowed mime types. Optionally pass a custom file size.
 
 ### getType(string $mime_type): ?string
 

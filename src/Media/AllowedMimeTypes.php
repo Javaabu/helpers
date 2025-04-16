@@ -10,6 +10,43 @@ use Illuminate\Support\Arr;
 
 abstract class AllowedMimeTypes
 {
+    protected static string $default_icon_pack = 'fontawesome';
+
+    protected static array $icon_prefixes = [
+        'fontawesome' => 'fa-regular fa-',
+        'material' => 'zmdi zmdi-',
+    ];
+
+    protected static array $icons = [
+        'fontawesome' => [
+            'default' => 'file',
+            'excel' => 'file-excel',
+            'word' => 'file-word',
+            'powerpoint' => 'file-powerpoint',
+            'audio' => 'file-audio',
+            'video' => 'file-video',
+            'image' => 'file-image',
+            'pdf' => 'file-pdf',
+            'text' => 'file-lines',
+            'json' => 'file-code',
+            'zip' => 'file-zip',
+        ],
+
+        'material' => [
+            'default' => 'file',
+            'excel' => 'border-all',
+            'word' => 'file-text',
+            'powerpoint' => 'slideshow',
+            'audio' => 'file-audio',
+            'video' => 'collection-video',
+            'image' => 'collection-image',
+            'pdf' => 'collection-pdf',
+            'text' => 'file-text',
+            'json' => 'code',
+            'zip' => 'archive',
+        ],
+    ];
+
     /**
      * @var array
      */
@@ -46,12 +83,6 @@ abstract class AllowedMimeTypes
             'image/vnd.microsoft.icon'
         ],
 
-        'document' => [
-            'application/pdf',
-            'image/jpeg',
-            'image/png',
-        ],
-
         'video' => [
             'video/webm',
             'video/ogg',
@@ -72,7 +103,53 @@ abstract class AllowedMimeTypes
             'application/vnd.ms-excel.addin.macroEnabled.12',
             'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
             'text/csv',
-        ]
+        ],
+
+        'word' => [
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+            'application/vnd.ms-word.document.macroEnabled.12',
+            'application/vnd.ms-word.template.macroEnabled.12',
+        ],
+
+        'powerpoint' => [
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.openxmlformats-officedocument.presentationml.template',
+            'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+            'application/vnd.ms-powerpoint.addin.macroEnabled.12',
+            'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+            'application/vnd.ms-powerpoint.template.macroEnabled.12',
+            'application/vnd.ms-powerpoint.slideshow.macroEnabled.12'
+        ],
+
+        'pdf' => [
+            'application/pdf',
+        ],
+
+        'text' => [
+            'text/plain'
+        ],
+
+        'json' => [
+            'application/json'
+        ],
+
+        'document' => [
+            'application/pdf',
+            'image/jpeg',
+            'image/png',
+        ],
+
+        'zip' => [
+            'application/zip',
+            'application/octet-stream',
+            'application/x-zip-compressed',
+            'multipart/x-zip',
+        ],
+
+
     ];
 
     /**
@@ -265,6 +342,73 @@ abstract class AllowedMimeTypes
         'multipart/x-zip'                                                           => 'zip',
         'text/x-scriptzsh'                                                          => 'zsh',
     ];
+
+    /**
+     * Set the default icon pack
+     */
+    public static function setDefaultIconPack(string $icon_pack): void
+    {
+        self::$default_icon_pack = $icon_pack;
+    }
+
+    /**
+     * Get the default icon pack
+     */
+    public static function getDefaultIconPack(): string
+    {
+        return self::$default_icon_pack;
+    }
+
+    /**
+     * Get the icon prefix
+     */
+    public static function getIconPrefix(string $icon_pack = ''): string
+    {
+        if (! $icon_pack) {
+            $icon_pack = self::getDefaultIconPack();
+        }
+
+        return self::$icon_prefixes[$icon_pack] ?? '';
+    }
+
+    /**
+     * Get the icon based on mime type
+     */
+    public static function getIcon(string $mime_type, string $icon_pack = '', bool $with_prefix = false): string
+    {
+        if (! $icon_pack) {
+            $icon_pack = self::getDefaultIconPack();
+        }
+
+        // get icon pack
+        $icons = self::$icons[$icon_pack] ?? [];
+
+        // try using mime type
+        $icon = $icons[$mime_type] ?? '';
+
+        // try using type
+        if (! $icon) {
+            $icon = $icons[self::getType($mime_type)] ?? '';
+        }
+
+        $icon = $icon ?: ($icons['default'] ?? '');
+
+        return $with_prefix && $icon ? self::getIconPrefix($icon_pack) . $icon : $icon;
+    }
+
+    public static function registerIcons(string $icon_pack, array $icons, bool $merge = true): void
+    {
+        $pack_icons = self::$icons[$icon_pack] ?? [];
+
+        $pack_icons = $merge ? array_merge($pack_icons, $icons) : $icons;
+
+        self::$icons[$icon_pack] = $pack_icons;
+    }
+
+    public static function registerIconPrefix(string $icon_pack, string $prefix): void
+    {
+        self::$icon_prefixes[$icon_pack] = $prefix;
+    }
 
     /**
      * Get all allowed types

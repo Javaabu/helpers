@@ -17,6 +17,61 @@ class AllowedMimeTypesTest extends TestCase
     }
 
     #[Test]
+    public function it_can_get_default_icon_pack(): void
+    {
+        $this->assertEquals('fontawesome', AllowedMimeTypes::getDefaultIconPack());
+    }
+
+    #[Test]
+    public function it_can_change_the_default_icon_pack(): void
+    {
+        AllowedMimeTypes::setDefaultIconPack('material');
+
+        $this->assertEquals('material', AllowedMimeTypes::getDefaultIconPack());
+    }
+
+    #[Test]
+    public function it_can_get_the_icon_prefix(): void
+    {
+        $this->assertEquals('fa-regular fa-', AllowedMimeTypes::getIconPrefix());
+        $this->assertEquals('zmdi zmdi-', AllowedMimeTypes::getIconPrefix('material'));
+    }
+
+    #[Test]
+    public function it_can_register_the_icon_prefix(): void
+    {
+        AllowedMimeTypes::registerIconPrefix('fontawesome', 'fa-light fa-');
+
+        $this->assertEquals('fa-light fa-', AllowedMimeTypes::getIconPrefix());
+    }
+
+    #[Test]
+    public function it_can_get_the_icon(): void
+    {
+        $this->assertEquals('file-word', AllowedMimeTypes::getIcon('word'));
+        $this->assertEquals('file-word', AllowedMimeTypes::getIcon('application/msword'));
+        $this->assertEquals('file-text', AllowedMimeTypes::getIcon('application/msword', 'material'));
+        $this->assertEquals('fa-regular fa-file-word', AllowedMimeTypes::getIcon('application/msword', with_prefix: true));
+        $this->assertEquals('file', AllowedMimeTypes::getIcon('test'));
+    }
+
+    #[Test]
+    public function it_can_register_icons(): void
+    {
+        AllowedMimeTypes::registerIcons('fontawesome', [
+            'test' => 'file-test'
+        ]);
+
+        $this->assertEquals('file-test', AllowedMimeTypes::getIcon('test'));
+
+        AllowedMimeTypes::registerIcons('fontawesome', [
+            'default' => 'file'
+        ], false);
+
+        $this->assertEquals('file', AllowedMimeTypes::getIcon('word'));
+    }
+
+    #[Test]
     public function it_can_get_the_max_file_size_based_on_multiple_file_types(): void
     {
         $this->assertEquals(1024 * 10, AllowedMimeTypes::getMaxFileSize(['document', 'image']));
