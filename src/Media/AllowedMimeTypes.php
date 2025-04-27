@@ -411,6 +411,20 @@ abstract class AllowedMimeTypes
     }
 
     /**
+     * Get the allowed types list
+     */
+    public static function getTypeLabels(): array
+    {
+        $labels = [];
+
+        foreach (self::$allowed_mime_types as $type => $mime_types) {
+            $labels[$type] = __(slug_to_title($type));
+        }
+
+        return $labels;
+    }
+
+    /**
      * Get all allowed types
      *
      * @return array

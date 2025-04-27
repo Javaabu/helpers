@@ -164,6 +164,7 @@ class AllowedMimeTypesTest extends TestCase
     public function it_can_get_all_allowed_types()
     {
         $result = AllowedMimeTypes::getAllowedTypes();
+
         $this->assertEquals([
             'image',
             'icon',
@@ -178,6 +179,28 @@ class AllowedMimeTypesTest extends TestCase
             'document',
             'zip',
             'paper',
+        ], $result);
+    }
+
+    #[Test]
+    public function it_can_get_type_labels()
+    {
+        $result = AllowedMimeTypes::getTypeLabels();
+
+        $this->assertEquals([
+            'image' => 'Image',
+            'icon' => 'Icon',
+            'video' => 'Video',
+            'audio' => 'Audio',
+            'excel' => 'Excel',
+            'word' => 'Word',
+            'powerpoint' => 'Powerpoint',
+            'pdf' => 'Pdf',
+            'text' => 'Text',
+            'json' => 'Json',
+            'document' => 'Document',
+            'zip' => 'Zip',
+            'paper' => 'Paper',
         ], $result);
     }
 }

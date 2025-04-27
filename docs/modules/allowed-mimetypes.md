@@ -197,6 +197,15 @@ AllowedMimeTypes::getType('image/jpeg');
 // returns image
 ```
 
+### getTypeLabels(): array
+
+Returns a list of all allowed types.
+
+```php
+AllowedMimeTypes::getTypeLabels();
+// ['image' => 'Image', 'video' => 'Video'...]
+```
+
 ### getFileSizeSetting(string $file_type): string
 
 Given a file type, returns the registered file size setting. If no setting is registered, falls back to `'max_upload_file_size'`.
