@@ -930,3 +930,101 @@ if (! function_exists('relative_date')) {
             __(':time ago', ['time' => $diff], $locale);
     }
 }
+
+if (! function_exists('youtube_thumbnail_url')) {
+
+    /**
+     * Get the video thumbnail from a youtube url
+     *
+     * @param string
+     * @return string
+     */
+    function youtube_thumbnail_url(?string $url, string $resolution = 'max'): ?string
+    {
+        $resolutions = [
+            'sd' => 'sddefault.jpg',
+            'mq' => 'mqdefault.jpg',
+            'hq' => 'hqdefault.jpg',
+            'max' => 'maxresdefault.jpg',
+        ];
+
+        $youtube_id = youtube_video_id($url);
+
+        if ($youtube_id) {
+            return 'https://img.youtube.com/vi/' . $youtube_id . '/' . $resolutions[$resolution];
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('youtube_embed_url')) {
+    /**
+     * Get the video id from a youtube url
+     *
+     * @param string
+     * @return string
+     */
+    function youtube_embed_url(?string $url): string {
+        $video_id = youtube_video_id($url);
+        return $video_id ? 'https://www.youtube.com/embed/'.$video_id : '';
+    }
+}
+
+if (! function_exists('youtube_video_id')) {
+    /**
+     * Get the video id from a youtube url
+     *
+     * @param string
+     * @return string
+     */
+    function youtube_video_id(?string $url): ?string {
+        if ($url) {
+            return (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match)) ? $match[1] : null;
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('google_drive_embed_url')) {
+    /**
+     * Get Google Drive embed url
+     *
+     * @param string
+     * @return string
+     */
+    function google_drive_embed_url(?string $url): string {
+        $file_id = google_drive_file_id($url);
+        return $file_id ? "https://drive.google.com/file/d/$file_id/preview" : "https://docs.google.com/viewer?embedded=true&url=".urlencode($url);
+    }
+}
+
+if (! function_exists('google_drive_file_id')) {
+    /**
+     * Get the file id from a Google Drive url
+     * https://stackoverflow.com/questions/55663035/i-want-to-get-id-from-the-google-drive-file-using-php
+     *
+     * @param string
+     * @return string
+     */
+    function google_drive_file_id(?string $url): ?string {
+        if ($url && Str::startsWith($url, 'https://drive.google.com')) {
+            $url_parts = parse_url($url);
+
+            if ($query = ($url_parts['query'] ?? '')) {
+                $query_parts = [];
+
+                parse_str($query, $query_parts);
+
+                if (! empty($query_parts['id'])) {
+                    return $query_parts['id'];
+                }
+            }
+
+            return explode('/', $url_parts['path'])[3] ?? null;
+        }
+
+        return null;
+    }
+}

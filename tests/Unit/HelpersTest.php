@@ -14,6 +14,40 @@ class HelpersTest extends TestCase
     }
 
     #[Test]
+    public function it_can_extract_youtube_thumbnail_from_youtube_url()
+    {
+        $this->assertEquals('https://img.youtube.com/vi/p7P8DmTbjUY/maxresdefault.jpg', youtube_thumbnail_url('https://www.youtube.com/watch?v=p7P8DmTbjUY'));
+        $this->assertEquals('https://img.youtube.com/vi/p7P8DmTbjUY/hqdefault.jpg', youtube_thumbnail_url('https://www.youtube.com/watch?v=p7P8DmTbjUY', 'hq'));
+    }
+
+    #[Test]
+    public function it_can_extract_youtube_video_id_from_youtube_url()
+    {
+        $this->assertEquals('p7P8DmTbjUY', youtube_video_id('https://www.youtube.com/watch?v=p7P8DmTbjUY'));
+        $this->assertEquals('p7P8DmTbjUY', youtube_video_id('https://youtu.be/p7P8DmTbjUY?si=cYqLYlT73rHBnx8F'));
+    }
+
+    #[Test]
+    public function it_can_get_youtube_embed_url_from_youtube_url()
+    {
+        $this->assertEquals('https://www.youtube.com/embed/p7P8DmTbjUY', youtube_embed_url('https://www.youtube.com/watch?v=p7P8DmTbjUY'));
+        $this->assertEquals('https://www.youtube.com/embed/p7P8DmTbjUY', youtube_embed_url('https://youtu.be/p7P8DmTbjUY?si=cYqLYlT73rHBnx8F'));
+    }
+
+    #[Test]
+    public function it_can_get_google_drive_file_id_from_google_drive_url()
+    {
+        $this->assertEquals('13YYH0OlibUYzT2q7uRPOQotbE03rdsDr', google_drive_file_id('https://drive.google.com/file/d/13YYH0OlibUYzT2q7uRPOQotbE03rdsDr/view?usp=drive_link'));
+    }
+
+    #[Test]
+    public function it_can_get_google_drive_embed_url_from_url()
+    {
+        $this->assertEquals('https://drive.google.com/file/d/13YYH0OlibUYzT2q7uRPOQotbE03rdsDr/preview', google_drive_embed_url('https://drive.google.com/file/d/13YYH0OlibUYzT2q7uRPOQotbE03rdsDr/view?usp=drive_link'));
+        $this->assertEquals('https://docs.google.com/viewer?embedded=true&url=https%3A%2F%2Fwww.w3.org%2FWAI%2FER%2Ftests%2Fxhtml%2Ftestfiles%2Fresources%2Fpdf%2Fdummy.pdf', google_drive_embed_url('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'));
+    }
+
+    #[Test]
     public function it_can_convert_seconds_to_human_readable_time_with_zeros_omitted()
     {
         $this->assertEquals('1 year 2 months 14 days 30 minutes 15 seconds', seconds_to_human_readable(37931415, false, false));
