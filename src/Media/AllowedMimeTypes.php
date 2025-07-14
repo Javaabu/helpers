@@ -600,6 +600,30 @@ abstract class AllowedMimeTypes
     }
 
     /**
+     * Convert accept string to extensions string
+     *
+     * @param $accept
+     * @param  string  $separator
+     * @return string
+     */
+    public static function acceptToExtensions($accept, string $separator = ', '): string
+    {
+        $mime_types = to_array($accept, ',', true);
+
+        $extensions = [];
+
+        foreach ($mime_types as $mime) {
+            if ($ext = self::getExtension($mime)) {
+                $extensions[] = $ext;
+            }
+        }
+
+        $extensions = array_unique($extensions);
+
+        return implode($separator, $extensions);
+    }
+
+    /**
      * Get the the extension for the mime type
      *
      * @param $mime
