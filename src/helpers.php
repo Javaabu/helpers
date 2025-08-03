@@ -227,11 +227,11 @@ if (! function_exists('slug_to_title')) {
     function slug_to_title($slug, string $separator = '_'): string
     {
         return Str::of($slug)
-            ->camel()
-            ->snake($separator)
-            ->replace($separator, ' ')
-            ->title()
-            ->toString();;
+            ->replaceMatches('/([a-z])([A-Z])/', '$1 $2') // Split camelCase: pEnding → p Ending
+            ->replace($separator, ' ')                    // Replace custom separator (e.g. _ or space) with space
+            ->lower()                                     // Lowercase everything
+            ->title()                                     // Capitalize words
+            ->toString();
     }
 }
 
