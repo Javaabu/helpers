@@ -160,6 +160,7 @@ class HelpersTest extends TestCase
         $this->assertEquals('Apple', slug_to_title('apple'));
         $this->assertEquals('Apple Magic', slug_to_title('apple_magic'));
         $this->assertEquals('Apple Magic', slug_to_title('apple Magic', ' '));
+        $this->assertEquals('Apple Magic', slug_to_title('AppleMagic'));
     }
 
     #[Test]

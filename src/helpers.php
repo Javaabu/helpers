@@ -226,7 +226,12 @@ if (! function_exists('slug_to_title')) {
      */
     function slug_to_title($slug, string $separator = '_'): string
     {
-        return Str::title(str_replace($separator, ' ', $slug));
+        return Str::of($slug)
+            ->camel()
+            ->snake($separator)
+            ->replace($separator, ' ')
+            ->title()
+            ->toString();;
     }
 }
 
