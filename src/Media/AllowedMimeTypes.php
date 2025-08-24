@@ -198,6 +198,7 @@ abstract class AllowedMimeTypes
         'application/x-x509-ca-cert'                                                => 'crt',
         'application/pkix-cert'                                                     => 'crt',
         'text/css'                                                                  => 'css',
+        'text/csv'                                                                  => 'csv',
         'text/x-comma-separated-values'                                             => 'csv',
         'text/comma-separated-values'                                               => 'csv',
         'application/vnd.msexcel'                                                   => 'csv',
