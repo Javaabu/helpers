@@ -397,7 +397,7 @@ abstract class TestCase extends BaseTestCase
      * @param array $params
      * @param Client|null $client
      */
-    protected function getAccessToken(string $grant_type = 'client_credentials', array $scopes = ['read', 'write'], array $params = [], Client $client = null)
+    protected function getAccessToken(string $grant_type = 'client_credentials', array $scopes = ['read', 'write'], array $params = [], ?Client $client = null)
     {
         if (empty($client)) {
             // create a new client
