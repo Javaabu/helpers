@@ -4,6 +4,7 @@ namespace Javaabu\Helpers\Testing;
 
 use App\Models\User;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -397,21 +398,22 @@ abstract class TestCase extends BaseTestCase
      * @param array $params
      * @param Client|null $client
      */
-    protected function getAccessToken(string $grant_type = 'client_credentials', array $scopes = ['read', 'write'], array $params = [], ?Client $client = null)
+    protected function getAccessToken(
+        string $grant_type = 'client_credentials',
+        array $scopes = ['read', 'write'],
+        array $params = [],
+        ?Client $client = null
+    )
     {
         if (empty($client)) {
             // create a new client
             $user = $this->getActiveAdminUser('demo-user@javaabu.com');
-            $client = (new ClientRepository())->create(
-                $user->id,
-                'Test Client',
-                'http://localhost'
-            );
+            $client = $this->getOAuthClient($grant_type, 'users', $user);
         }
 
         $request_params = array_merge([
             'client_id' => $client->id,
-            'client_secret' => $client->secret,
+            'client_secret' => $client->plainSecret ?: $client->secret,
             'grant_type' => $grant_type,
             'scope' => implode(' ', $scopes),
         ], $params);
@@ -426,6 +428,46 @@ abstract class TestCase extends BaseTestCase
             ]);
 
         return ($response->json())['access_token'];
+    }
+
+    protected function getOAuthClient(
+        string $grant_type = 'client_credentials',
+        ?string $provider = null,
+        ?Authenticatable $user = null
+    ): Client
+    {
+        $repository = new ClientRepository();
+        $client = null;
+
+        // check if Passport 12
+        if (is_callable([$repository, 'create'])) {
+            // create a new client using old Passport 12 method
+            $client = $repository->create(
+                $user?->id,
+                'Test Client',
+                'http://localhost',
+                $provider,
+                password: $grant_type == 'password'
+            );
+        } else {
+            if ($grant_type === 'client_credentials') {
+                $client = $repository->createClientCredentialsGrantClient(
+                    'Test Client'
+                );
+            } elseif ($grant_type === 'personal_access') {
+                $client = $repository->createPersonalAccessGrantClient(
+                    'Test Client',
+                    $provider
+                );
+            } else {
+                $client = $repository->createPasswordGrantClient(
+                    'Test Client',
+                    $provider
+                );
+            }
+        }
+
+        return $client;
     }
 
     /**
@@ -491,7 +533,7 @@ abstract class TestCase extends BaseTestCase
         // initialize the CSRF Token
         session()->start();
 
-        $identifier = ($user && $user->is_active) ? $user->getPassportCookieIdentifier() : null;
+        $identifier = ($user && $user->is_active) ? $user->getPassportCookieIdentifier() : '';
 
         $cookie = $cookie_factory->make($identifier, session()->token());
 
