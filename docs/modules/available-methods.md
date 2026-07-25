@@ -38,6 +38,21 @@ $formatted = number_format_exact('1120.500', max_decimals: 0); // '1,120.5'
 $formatted = number_format_exact('1120.000', max_decimals: 0); // '1,120'
 ```
 
+## format_currency
+
+Formats the given amount as the given currency with the specified decimal precision.
+
+```php
+$formatted = format_currency(1120.0, 'USD'); // 'USD 1,120'
+$formatted = format_currency(1120.5); // 'MVR 1,120.50'
+$formatted = format_currency('1120.50'); // 'MVR 1,120.50'
+$formatted = format_currency('1120.500'); // 'MVR 1,120.50'
+$formatted = format_currency('1120', precision: 2); // 'MVR 1,120.00'
+$formatted = format_currency('1120.500', precision: 2); // 'MVR 1,120.50'
+$formatted = format_currency('1120.500', precision: 0); // 'MVR 1,121'
+$formatted = format_currency('1120.000', precision: 0); // 'MVR 1,120'
+```
+
 ## youtube_video_id
 
 Extracts the video id from YouTube URLs.

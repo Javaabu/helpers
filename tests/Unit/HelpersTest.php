@@ -186,4 +186,19 @@ class HelpersTest extends TestCase
         $this->assertEquals('http://example.com?key=value&other_key', add_query_arg(['key' => 'value'], 'http://example.com?key=old_value&other_key'));
         $this->assertEquals(url('').'?key=value', add_query_arg('key', 'value'));
     }
+
+    #[Test]
+    public function it_can_format_currency()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->assertEquals('MVR 1,120', format_currency(1120.0));
+        $this->assertEquals('MVR 1,120.50', format_currency(1120.5));
+        $this->assertEquals('MVR 1,120.50', format_currency('1120.50'));
+        $this->assertEquals('MVR 1,120.50', format_currency('1120.500'));
+        $this->assertEquals('MVR 1,120.00', format_currency('1120', precision: 2));
+        $this->assertEquals('MVR 1,120.50', format_currency('1120.500', precision: 2));
+        $this->assertEquals('MVR 1,121', format_currency('1120.500', precision: 0));
+        $this->assertEquals('MVR 1,120', format_currency('1120.000', precision: 0));
+    }
 }

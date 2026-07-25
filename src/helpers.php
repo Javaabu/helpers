@@ -822,10 +822,12 @@ if (! function_exists('format_currency')) {
      * @param null $locale
      * @return string
      */
-    function format_currency($value, string $code = 'MVR', $locale = null): string
+    function format_currency($value, string $code = 'MVR', $locale = null, $precision = null): string
     {
         // include decimals, only if it has any
-        $precision = floor($value) == $value ? 0 : 2;
+        if (is_null($precision)) {
+            $precision = floor($value) == $value ? 0 : 2;
+        }
 
         if (! $code) {
             return number_format($value, $precision);

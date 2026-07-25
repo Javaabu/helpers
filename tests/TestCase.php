@@ -33,7 +33,7 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    protected function registerTestRoute($uri, callable $post = null): self
+    protected function registerTestRoute($uri, ?callable $post = null): self
     {
         Route::middleware('web')->group(function () use ($uri, $post) {
             Route::view($uri, $uri);
