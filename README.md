@@ -10,7 +10,7 @@ Laravel helper functions that aide in development.
 
 ## Documentation
 
-You'll find the documentation on [https://docs.javaabu.com/docs/helpers](https://docs.javaabu.com/docs/helpers).
+You'll find the documentation on [https://docs.javaabu.com/helpers](https://docs.javaabu.com/helpers).
 
 Find yourself stuck using the package? Found a bug? Do you have general questions or suggestions for improving the package? Feel free to create an [issue](../../issues) on GitHub, we'll try to address it as soon as possible.
 
